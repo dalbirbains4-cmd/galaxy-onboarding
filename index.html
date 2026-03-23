@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Galaxy Pharma — Onboarding Workflow Manager</title>
+<style>
+:root {
+  --navy: #1a2744; --navy-light: #2c3e6b;
+  --blue: #3b82f6; --blue-light: #dbeafe; --blue-dark: #1e40af;
+  --green: #10b981; --green-light: #d1fae5;
+  --red: #ef4444; --red-light: #fee2e2;
+  --amber: #f59e0b; --amber-light: #fef3c7;
+  --purple: #8b5cf6; --purple-light: #ede9fe;
+  --teal: #14b8a6; --teal-light: #ccfbf1;
+  --gray-50: #f9fafb; --gray-100: #f3f4f6; --gray-200: #e5e7eb; --gray-300: #d1d5db;
+  --gray-400: #9ca3af; --gray-500: #6b7280; --gray-600: #4b5563; --gray-700: #374151;
+  --gray-800: #1f2937; --gray-900: #111827; --white: #fff;
+  --shadow: 0 1px 3px rgba(0,0,0,0.1); --shadow-lg: 0 10px 15px rgba(0,0,0,0.1);
+}
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: 'Segoe UI', -apple-system, sans-serif; background: var(--gray-100); color: var(--gray-800); line-height: 1.5; }
+.header { background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-lg); }
+.header h1 { font-size: 18px; font-weight: 700; }
+.header .sub { font-size: 11px; opacity: 0.6; }
+.hdr-btns { display: flex; gap: 8px; }
+.hdr-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; }
+.hdr-btn:hover { background: rgba(255,255,255,0.22); }
+.hdr-btn.primary { background: var(--blue); border-color: var(--blue); }
+
+.nav { background: white; border-bottom: 1px solid var(--gray-200); display: flex; padding: 0 24px; }
+.nav-tab { padding: 11px 18px; font-size: 13px; font-weight: 600; color: var(--gray-500); cursor: pointer; border-bottom: 2px solid transparent; }
+.nav-tab:hover { color: var(--gray-700); background: var(--gray-50); }
+.nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
+.nav-badge { background: var(--red); color: white; font-size: 10px; font-weight: 700; padding: 1px 6px; border-radius: 10px; margin-left: 4px; }
+
+.container { max-width: 1500px; margin: 0 auto; padding: 20px; }
+.page { display: none; }
+.page.active { display: block; }
+
+.card { background: white; border-radius: 8px; box-shadow: var(--shadow); margin-bottom: 16px; overflow: hidden; }
+.card-hd { padding: 14px 18px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; }
+.card-hd h2 { font-size: 15px; font-weight: 600; }
+.card-bd { padding: 18px; }
+
+.stats { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 12px; margin-bottom: 20px; }
+.stat { background: white; border-radius: 8px; padding: 16px; box-shadow: var(--shadow); border-left: 4px solid var(--gray-300); }
+.stat.blue { border-left-color: var(--blue); }
+.stat.green { border-left-color: var(--green); }
+.stat.red { border-left-color: var(--red); }
+.stat.amber { border-left-color: var(--amber); }
+.stat.purple { border-left-color: var(--purple); }
+.stat.teal { border-left-color: var(--teal); }
+.stat-label { font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); }
+.stat-val { font-size: 28px; font-weight: 700; margin-top: 2px; }
+
+.btn { display: inline-flex; align-items: center; gap: 5px; padding: 8px 16px; border-radius: 6px; font-size: 13px; font-weight: 600; cursor: pointer; border: none; transition: all 0.15s; }
+.btn-sm { padding: 5px 10px; font-size: 11px; }
+.btn-xs { padding: 3px 8px; font-size: 10px; }
+.btn-blue { background: var(--blue); color: white; } .btn-blue:hover { background: var(--blue-dark); }
+.btn-green { background: var(--green); color: white; }
+.btn-red { background: var(--red); color: white; }
+.btn-amber { background: var(--amber); color: white; }
+.btn-purple { background: var(--purple); color: white; }
+.btn-outline { background: white; color: var(--gray-700); border: 1px solid var(--gray-300); }
+.btn-outline:hover { background: var(--gray-50); }
+
+.badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
+
+/* WORKFLOW STAGES */
+.wf-not-started { background: var(--gray-200); color: var(--gray-600); }
+.wf-email-queued { background: #e0e7ff; color: #3730a3; }
+.wf-email-sent { background: var(--blue-light); color: var(--blue-dark); }
+.wf-awaiting { background: var(--amber-light); color: #92400e; }
+.wf-in-progress { background: var(--purple-light); color: #5b21b6; }
+.wf-blocked { background: var(--red-light); color: #991b1b; }
+.wf-complete { background: var(--green-light); color: #065f46; }
+.wf-overdue { background: var(--red); color: white; }
+
+/* PIPELINE VIEW */
+.pipeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; min-height: 400px; }
+.pipe-col { background: var(--gray-50); border-radius: 8px; min-height: 300px; }
+.pipe-col-hd { padding: 10px 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
+.pipe-col-hd .count { background: rgba(255,255,255,0.3); padding: 1px 8px; border-radius: 10px; font-size: 11px; }
+.pipe-col-body { padding: 8px; display: flex; flex-direction: column; gap: 6px; max-height: 600px; overflow-y: auto; }
+.pipe-card { background: white; border-radius: 6px; padding: 10px 12px; box-shadow: var(--shadow); border-left: 3px solid var(--gray-300); cursor: pointer; font-size: 12px; transition: all 0.15s; }
+.pipe-card:hover { box-shadow: var(--shadow-lg); transform: translateY(-1px); }
+.pipe-card .pc-name { font-weight: 600; font-size: 12px; margin-bottom: 4px; line-height: 1.3; }
+.pipe-card .pc-meta { font-size: 10px; color: var(--gray-400); display: flex; justify-content: space-between; }
+.pipe-card .pc-emp { font-size: 10px; color: var(--blue); font-weight: 600; }
+.pipe-card.overdue { border-left-color: var(--red); background: #fff5f5; }
+.pipe-card.overdue .pc-name { color: var(--red); }
+
+/* WORKFLOW DETAIL */
+.wf-timeline { display: flex; align-items: flex-start; gap: 0; margin: 16px 0; }
+.wf-step { flex: 1; text-align: center; position: relative; }
+.wf-step::after { content: ''; position: absolute; top: 16px; left: 50%; width: 100%; height: 2px; background: var(--gray-200); z-index: 0; }
+.wf-step:last-child::after { display: none; }
+.wf-dot { width: 32px; height: 32px; border-radius: 50%; margin: 0 auto 6px; display: flex; align-items: center; justify-content: center; font-size: 14px; position: relative; z-index: 1; border: 2px solid var(--gray-300); background: white; }
+.wf-step.done .wf-dot { background: var(--green); border-color: var(--green); color: white; }
+.wf-step.done::after { background: var(--green); }
+.wf-step.current .wf-dot { background: var(--blue); border-color: var(--blue); color: white; animation: pulse 2s infinite; }
+.wf-step.current::after { background: linear-gradient(to right, var(--blue), var(--gray-200)); }
+.wf-step-label { font-size: 10px; font-weight: 600; color: var(--gray-500); }
+.wf-step.done .wf-step-label { color: var(--green); }
+.wf-step.current .wf-step-label { color: var(--blue); font-weight: 700; }
+@keyframes pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(59,130,246,0.3); } 50% { box-shadow: 0 0 0 8px rgba(59,130,246,0); } }
+
+.wf-log { border-left: 2px solid var(--gray-200); margin-left: 16px; padding-left: 16px; }
+.wf-log-item { position: relative; margin-bottom: 12px; padding-left: 8px; }
+.wf-log-item::before { content: ''; position: absolute; left: -22px; top: 5px; width: 10px; height: 10px; border-radius: 50%; background: var(--gray-300); }
+.wf-log-item.action::before { background: var(--blue); }
+.wf-log-item.alert::before { background: var(--red); }
+.wf-log-item.success::before { background: var(--green); }
+.wf-log-time { font-size: 10px; color: var(--gray-400); }
+.wf-log-text { font-size: 13px; }
+
+/* TASK DETAIL PANEL */
+.task-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.td-field { margin-bottom: 12px; }
+.td-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--gray-500); margin-bottom: 2px; }
+.td-value { font-size: 14px; }
+
+/* FORMS */
+.form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.fg { margin-bottom: 14px; }
+.fg label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-700); margin-bottom: 3px; }
+.fg input, .fg select, .fg textarea { width: 100%; padding: 9px 11px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 13px; font-family: inherit; }
+.fg input:focus, .fg select:focus { outline: none; border-color: var(--blue); box-shadow: 0 0 0 3px rgba(59,130,246,0.1); }
+
+table { width: 100%; border-collapse: collapse; }
+th { background: var(--gray-50); text-align: left; padding: 9px 12px; font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.5px; color: var(--gray-500); border-bottom: 2px solid var(--gray-200); }
+td { padding: 10px 12px; border-bottom: 1px solid var(--gray-100); font-size: 13px; }
+tr:hover { background: var(--gray-50); }
+
+.modal-overlay { display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 200; align-items: center; justify-content: center; }
+.modal-overlay.show { display: flex; }
+.modal { background: white; border-radius: 10px; width: 92%; max-width: 800px; max-height: 88vh; overflow-y: auto; box-shadow: var(--shadow-lg); }
+.modal-hd { padding: 16px 20px; border-bottom: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: space-between; }
+.modal-hd h2 { font-size: 16px; }
+.modal-close { background: none; border: none; font-size: 22px; cursor: pointer; color: var(--gray-400); }
+.modal-bd { padding: 20px; }
+.modal-ft { padding: 14px 20px; border-top: 1px solid var(--gray-200); display: flex; gap: 8px; justify-content: flex-end; }
+
+.toast-c { position: fixed; bottom: 20px; right: 20px; z-index: 300; display: flex; flex-direction: column; gap: 6px; }
+.toast { padding: 10px 18px; border-radius: 8px; color: white; font-size: 13px; font-weight: 500; box-shadow: var(--shadow-lg); animation: slideIn 0.3s; }
+.toast.ok { background: var(--green); } .toast.err { background: var(--red); } .toast.info { background: var(--blue); } .toast.warn { background: var(--amber); }
+@keyframes slideIn { from { transform: translateX(100%); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+
+.filter-bar { display: flex; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; align-items: center; }
+.filter-bar select, .filter-bar input { padding: 7px 10px; border: 1px solid var(--gray-300); border-radius: 6px; font-size: 12px; }
+.chip { padding: 5px 12px; border-radius: 16px; font-size: 11px; font-weight: 600; cursor: pointer; border: 1px solid var(--gray-300); background: white; }
+.chip:hover { background: var(--gray-100); }
+.chip.on { background: var(--blue); color: white; border-color: var(--blue); }
+
+.progress-bar { background: var(--gray-200); border-radius: 4px; height: 6px; overflow: hidden; }
+.progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
+
+/* Responsive */
+@media (max-width: 1100px) { .pipeline { grid-template-columns: repeat(3, 1fr); } }
+@media (max-width: 700px) { .pipeline { grid-template-columns: 1fr 1fr; } .form-grid { grid-template-columns: 1fr; } .task-detail { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div class="header">
+  <div><h1>🏥 Galaxy Pharma — Onboarding Workflow Manager</h1><div class="sub">Virtual Onboarding Coordinator • All tasks managed by Sumesh Nair</div></div>
+  <div class="hdr-btns">
+    <button class="hdr-btn" onclick="exportData()">📤 Export</button>
+    <button class="hdr-btn" onclick="importData()">📥 Import</button>
+    <button class="hdr-btn primary" onclick="showModal('new-hire-modal')">+ New Hire</button>
+  </div>
+</div>
+<div class="nav">
+  <div class="nav-tab active" onclick="go('dashboard',this)">📊 Dashboard</div>
+  <div class="nav-tab" onclick="go('pipeline',this)">🔀 Workflow Pipeline <span class="nav-badge" id="badge-pipe">0</span></div>
+  <div class="nav-tab" onclick="go('tracker',this)">📋 Task Tracker</div>
+  <div class="nav-tab" onclick="go('emails',this)">📧 Email Log</div>
+  <div class="nav-tab" onclick="go('settings',this)">⚙️ Settings</div>
+</div>
+<div class="container">
+
+<!-- DASHBOARD -->
+<div class="page active" id="pg-dashboard">
+  <div class="stats" id="dash-stats"></div>
+  <div style="display:grid; grid-template-columns: 1.2fr 1fr; gap: 16px;">
+    <div class="card"><div class="card-hd"><h2>Active Onboardings</h2></div><div class="card-bd" id="dash-active"></div></div>
+    <div class="card"><div class="card-hd"><h2>🔴 Needs Attention</h2></div><div class="card-bd" id="dash-attention" style="max-height:400px; overflow-y:auto;"></div></div>
+  </div>
+</div>
+
+<!-- PIPELINE -->
+<div class="page" id="pg-pipeline">
+  <div class="filter-bar">
+    <select id="pipe-emp" onchange="renderPipeline()"><option value="all">All Employees</option></select>
+    <select id="pipe-section" onchange="renderPipeline()"><option value="all">All Sections</option></select>
+    <div style="flex:1"></div>
+    <button class="btn btn-amber btn-sm" onclick="sendAllOverdue()">📧 Send All Overdue Reminders</button>
+    <button class="btn btn-blue btn-sm" onclick="sendAllPending()">📧 Send All Pending Emails</button>
+  </div>
+  <div class="pipeline" id="pipeline-board"></div>
+</div>
+
+<!-- TRACKER -->
+<div class="page" id="pg-tracker">
+  <div class="filter-bar">
+    <select id="trk-emp" onchange="renderTracker()"><option value="all">All Employees</option></select>
+    <select id="trk-stage" onchange="renderTracker()"><option value="all">All Stages</option></select>
+    <input type="text" id="trk-search" placeholder="Search tasks..." oninput="renderTracker()">
+    <div style="flex:1"></div>
+    <span id="trk-count" style="font-size:12px; color:var(--gray-400);"></span>
+  </div>
+  <div class="card"><div class="card-bd"><table>
+    <thead><tr><th>Task</th><th>Employee</th><th>Section</th><th>Stage</th><th>Due</th><th>Reminders</th><th>Last Activity</th><th>Actions</th></tr></thead>
+    <tbody id="trk-tbody"></tbody>
+  </table></div></div>
+</div>
+
+<!-- EMAIL LOG -->
+<div class="page" id="pg-emails">
+  <div class="card"><div class="card-hd"><h2>📧 All Emails & Notifications</h2><span id="email-count" style="font-size:12px; color:var(--gray-400);"></span></div>
+  <div class="card-bd" id="email-log" style="max-height:600px; overflow-y:auto;"></div></div>
+</div>
+
+<!-- SETTINGS -->
+<div class="page" id="pg-settings">
+  <div class="card"><div class="card-hd"><h2>👤 Onboarding Coordinator</h2></div><div class="card-bd">
+    <div style="display:flex; gap:20px; align-items:center; padding:12px; background:var(--blue-light); border-radius:8px;">
+      <div style="width:48px;height:48px;border-radius:50%;background:var(--blue);color:white;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;">SN</div>
+      <div><div style="font-size:16px; font-weight:700;">Sumesh Nair</div><div style="font-size:13px; color:var(--gray-500);">All onboarding tasks are assigned to and managed by Sumesh</div></div>
+    </div>
+    <div class="form-grid" style="margin-top:16px;">
+      <div class="fg"><label>Coordinator Email</label><input type="email" id="coord-email" value="sumesh.nair@galaxypharma.net" onchange="saveStore()"></div>
+      <div class="fg"><label>Reminder Frequency (days)</label><select id="reminder-freq" onchange="saveStore()">
+        <option value="1">Every day</option><option value="2" selected>Every 2 days</option><option value="3">Every 3 days</option>
+      </select></div>
+      <div class="fg"><label>Escalation After (days overdue)</label><select id="esc-days" onchange="saveStore()">
+        <option value="3">3 days</option><option value="5" selected>5 days</option><option value="7">7 days</option>
+      </select></div>
+      <div class="fg"><label>Escalation CC Email</label><input type="email" id="esc-email" value="dalbir.bains@galaxypharma.net" onchange="saveStore()"></div>
+    </div>
+  </div></div>
+  <div class="card"><div class="card-hd"><h2>📋 Onboarding Template (49 Tasks)</h2></div><div class="card-bd" id="tmpl-preview"></div></div>
+</div>
+
+</div><!-- /container -->
+
+<!-- NEW HIRE MODAL -->
+<div class="modal-overlay" id="new-hire-modal">
+<div class="modal">
+  <div class="modal-hd"><h2>➕ Onboard New Employee</h2><button class="modal-close" onclick="hideModal('new-hire-modal')">&times;</button></div>
+  <div class="modal-bd">
+    <div class="form-grid">
+      <div class="fg"><label>Full Name *</label><input id="nh-name" placeholder="e.g. Mirna Hanna"></div>
+      <div class="fg"><label>Email</label><input id="nh-email" type="email" placeholder="mirna.hanna@galaxypharma.net"></div>
+      <div class="fg"><label>Role / Position *</label><select id="nh-role">
+        <option value="">Select...</option>
+        <option value="cGMP Quality Manager">cGMP Quality Manager</option>
+        <option value="Facility Manager">Facility Manager</option><option value="Facility Engineer">Facility Engineer</option>
+        <option value="Project Manager">Project Manager</option><option value="IT Administrator">IT Administrator</option>
+        <option value="Production Technician">Production Technician (cGMP)</option>
+        <option value="cGMP Pharmacist">cGMP Pharmacist</option><option value="Staff Pharmacist — PIC Track">Staff Pharmacist — PIC Track</option>
+        <option value="Quality Assurance">Quality Assurance</option><option value="Validation Specialist">Validation Specialist</option>
+        <option value="Consultant">Consultant</option><option value="Other">Other</option>
+      </select></div>
+      <div class="fg"><label>Start Date *</label><input id="nh-start" type="date"></div>
+      <div class="fg"><label>Department</label><select id="nh-dept">
+        <option value="Quality">Quality</option><option value="Production">Production</option><option value="Facilities">Facilities</option>
+        <option value="IT">IT</option><option value="Regulatory">Regulatory</option><option value="Administration">Administration</option>
+      </select></div>
+      <div class="fg"><label>Notes</label><input id="nh-notes" placeholder="Special notes..."></div>
+    </div>
+  </div>
+  <div class="modal-ft">
+    <button class="btn btn-outline" onclick="hideModal('new-hire-modal')">Cancel</button>
+    <button class="btn btn-blue" onclick="createHire()">🚀 Launch Onboarding — Send All Emails Now</button>
+  </div>
+</div></div>
+
+<!-- TASK DETAIL MODAL -->
+<div class="modal-overlay" id="task-modal">
+<div class="modal" style="max-width:850px;">
+  <div class="modal-hd"><h2 id="tm-title">Task Workflow</h2><button class="modal-close" onclick="hideModal('task-modal')">&times;</button></div>
+  <div class="modal-bd" id="tm-body"></div>
+</div></div>
+
+<div class="toast-c" id="toast-c"></div>
+<input type="file" id="imp-input" accept=".json" style="display:none" onchange="handleImport(event)">
+
+<script>
+// ===== WORKFLOW STAGES =====
+const STAGES = [
+  { id: 'email_sent', label: 'Email Sent', icon: '📤', color: 'blue', colBg: '#dbeafe', colText: '#1e40af' },
+  { id: 'awaiting_response', label: 'Awaiting Response', icon: '⏳', color: 'amber', colBg: '#fef3c7', colText: '#92400e' },
+  { id: 'in_progress', label: 'In Progress', icon: '🔄', color: 'purple', colBg: '#ede9fe', colText: '#5b21b6' },
+  { id: 'blocked', label: 'Blocked', icon: '🚫', color: 'red', colBg: '#fee2e2', colText: '#991b1b' },
+  { id: 'complete', label: 'Complete', icon: '✅', color: 'green', colBg: '#d1fae5', colText: '#065f46' },
+  { id: 'overdue', label: 'Overdue', icon: '🔴', color: 'red', colBg: '#fee2e2', colText: '#991b1b' },
+];
+const STAGE_ORDER = ['email_sent','awaiting_response','in_progress','blocked','complete','overdue'];
+
+// ===== ONBOARDING TEMPLATE =====
+const TEMPLATE = [
+  { section: "Day 1 — Initial Orientation", icon: "🏢", dueDays: 0, tasks: [
+    "Facility Tour","Organizational Overview","Company Policies (HR, IT, Quality, Facility Manual)",
+    "Issue Scrubs / Lab Coats","Assign Designated Workspace","Card Access / Keys / Security Setup",
+    "IT Systems Setup (MS 365, Email, Laptop, Adobe, GPT-5)","QMS / EMS / Doyle System Access"
+  ]},
+  { section: "Week 1 — HIPAA & Policies", icon: "🔒", dueDays: 5, tasks: [
+    "HIPAA Compliance Training","HR Policy Review & Acknowledgment","IT Security & Acceptable Use Policy",
+    "Quality Manual Review","Emergency Procedures / Safety Training"
+  ]},
+  { section: "Week 1–2 — 503B Regulatory", icon: "📜", dueDays: 10, tasks: [
+    "Overview of 503B Outsourcing Facilities","FDA Expectations for 503B Personnel",
+    "503B Quality Systems Overview","SOPs — General Reading Assignment"
+  ]},
+  { section: "Week 2–3 — cGMP Training", icon: "🔬", dueDays: 15, tasks: [
+    "cGMP Fundamentals","21 CFR Part 210 & 211","21 CFR Part 11 — Electronic Records",
+    "ALCOA+ Documentation Practices","Environmental Monitoring Training",
+    "cGMP Gowning Competency Assessment","Cleanroom Cleaning Competency Assessment"
+  ]},
+  { section: "Week 2–3 — USP Standards", icon: "📏", dueDays: 15, tasks: [
+    "USP <795> — Nonsterile Compounding","USP <797> — Sterile Compounding",
+    "USP <800> — Hazardous Drug Handling","USP <825> — Radiopharmaceuticals (if applicable)"
+  ]},
+  { section: "Week 3 — Federal & DEA", icon: "⚖️", dueDays: 20, tasks: [
+    "DEA Compliance Overview","Controlled Substance Storage & Documentation",
+    "DEA Form 222 / Disposal Procedures","NY Board of Pharmacy — Training Requirements",
+    "NY Board of Pharmacy — Compounding Requirements","Record Retention Requirements"
+  ]},
+  { section: "Week 3–4 — Facilities & Equipment", icon: "🏭", dueDays: 25, tasks: [
+    "Facilities & Equipment — EMS & Doyle Systems","Cleanroom Equipment (Hood/HEPA/HVAC/Lights/Doors)",
+    "Current Vendors (ENV, Comalli, Van Hook, Deagle, Ehrlich)","MFR/BPR — Ketamine & Nasal Spray Batch Records"
+  ]},
+  { section: "Week 4 — Systems & Readiness", icon: "💻", dueDays: 30, tasks: [
+    "Systems Onboarding: MES, EMS, ERP, QMS","cGMP Production Audit Readiness Survey",
+    "Preconditions to Production Gap Analysis","Production SOP Gap Analysis"
+  ]},
+  { section: "Day 30 — Completion Review", icon: "📋", dueDays: 30, tasks: [
+    "30-Day Performance & Integration Review","Training Completion Verification",
+    "Employee Signature on Checklist","Facility Manager Sign-Off","Quality Assurance Sign-Off"
+  ]}
+];
+
+// ===== DATA =====
+let S = { employees: [], emails: [], settings: { coordEmail: 'sumesh.nair@galaxypharma.net', reminderFreq: 2, escDays: 5, escEmail: 'dalbir.bains@galaxypharma.net' }};
+function saveStore() { localStorage.setItem('gp_onboard_v2', JSON.stringify(S)); }
+function loadStore() { const s = localStorage.getItem('gp_onboard_v2'); if (s) S = { ...S, ...JSON.parse(s) }; }
+
+// ===== UTILS =====
+const gid = () => 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
+const tod = () => new Date().toISOString().split('T')[0];
+const addD = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x.toISOString().split('T')[0]; };
+const dayDiff = (a, b) => Math.floor((new Date(b) - new Date(a)) / 86400000);
+const fmtDate = d => d ? new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
+const fmtFull = d => d ? new Date(d).toLocaleString() : '—';
+const now = () => new Date().toISOString();
+
+function toast(m, t='ok') {
+  const c = document.getElementById('toast-c'), d = document.createElement('div');
+  d.className = `toast ${t}`; d.textContent = m; c.appendChild(d);
+  setTimeout(() => d.remove(), 4000);
+}
+function showModal(id) { document.getElementById(id).classList.add('show'); }
+function hideModal(id) { document.getElementById(id).classList.remove('show'); }
+
+function go(page, el) {
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  document.getElementById('pg-'+page).classList.add('active');
+  if (el) el.classList.add('active');
+  render();
+}
+
+// ===== CREATE HIRE =====
+function createHire() {
+  const name = document.getElementById('nh-name').value.trim();
+  const role = document.getElementById('nh-role').value;
+  const start = document.getElementById('nh-start').value;
+  if (!name || !role || !start) { toast('Fill in Name, Role, and Start Date','err'); return; }
+
+  const emp = {
+    id: gid(), name, role, start,
+    email: document.getElementById('nh-email').value.trim(),
+    dept: document.getElementById('nh-dept').value,
+    notes: document.getElementById('nh-notes').value.trim(),
+    created: now(), status: 'active', tasks: []
+  };
+
+  // Generate ALL tasks — ALL concurrent, ALL assigned to Sumesh
+  TEMPLATE.forEach(sec => {
+    sec.tasks.forEach(taskName => {
+      const task = {
+        id: gid(), name: taskName, section: sec.section, sectionIcon: sec.icon,
+        dueDate: addD(start, sec.dueDays),
+        stage: 'email_sent', // All start at email_sent immediately
+        assignee: 'Sumesh Nair',
+        assigneeEmail: S.settings.coordEmail,
+        remindersSent: 0, lastReminder: null,
+        log: [{ time: now(), action: 'created', note: 'Task created — onboarding initiated' }]
+      };
+      emp.tasks.push(task);
+    });
+  });
+
+  S.employees.push(emp);
+
+  // Fire all emails immediately
+  fireAllInitialEmails(emp);
+
+  saveStore();
+  hideModal('new-hire-modal');
+  ['nh-name','nh-email','nh-notes'].forEach(x => document.getElementById(x).value = '');
+  document.getElementById('nh-role').value = '';
+
+  toast(`🚀 ${name} onboarded — ${emp.tasks.length} tasks launched, all emails sent to Sumesh!`);
+  go('pipeline', document.querySelectorAll('.nav-tab')[1]);
+}
+
+function fireAllInitialEmails(emp) {
+  // Group by section for organized emails
+  const sections = {};
+  emp.tasks.forEach(t => {
+    if (!sections[t.section]) sections[t.section] = [];
+    sections[t.section].push(t);
+  });
+
+  // Send one email per section
+  Object.entries(sections).forEach(([sec, tasks]) => {
+    const taskList = tasks.map(t => `  ☐ ${t.name} — due ${fmtDate(t.dueDate)}`).join('\n');
+    const subject = `ACTION REQUIRED: ${sec} — ${emp.name} (${emp.role})`;
+    const body = `Hi Sumesh,\n\n${emp.name} is joining Galaxy Pharma as ${emp.role} starting ${fmtDate(emp.start)}.\n\nThe following ${tasks.length} tasks require your action:\n\n${taskList}\n\nPlease complete each task and reply to confirm progress.\nOverdue tasks will trigger escalation reminders.\n\nThank you,\nGalaxy Pharma Onboarding System`;
+
+    // Log email
+    S.emails.unshift({ id: gid(), time: now(), type: 'initial', to: S.settings.coordEmail, toName: 'Sumesh Nair',
+      empName: emp.name, empId: emp.id, section: sec, subject, body, taskCount: tasks.length });
+
+    // Update each task log
+    tasks.forEach(t => {
+      t.log.push({ time: now(), action: 'email_sent', note: `Initial assignment email sent to Sumesh Nair` });
+      t.stage = 'email_sent';
+    });
+
+    // Open mailto
+    const mailto = `mailto:${S.settings.coordEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.open(mailto, '_blank');
+  });
+}
+
+// ===== ADVANCE TASK STAGE =====
+function advanceTask(empId, taskId, newStage, note) {
+  const emp = S.employees.find(e => e.id === empId);
+  const task = emp?.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  const oldStage = task.stage;
+  task.stage = newStage;
+  task.log.push({ time: now(), action: `stage_${newStage}`, note: note || `Stage changed: ${oldStage} → ${newStage}` });
+  if (newStage === 'complete') task.completedDate = tod();
+
+  // Check if all complete
+  if (emp.tasks.every(t => t.stage === 'complete')) {
+    emp.status = 'complete';
+    toast(`🎉 ${emp.name} — Onboarding 100% COMPLETE!`);
+  }
+  saveStore();
+  render();
+}
+
+// ===== SEND REMINDER =====
+function sendReminder(empId, taskId) {
+  const emp = S.employees.find(e => e.id === empId);
+  const task = emp?.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  const daysOver = task.dueDate < tod() ? dayDiff(task.dueDate, tod()) : 0;
+  const escalate = daysOver >= (S.settings.escDays || 5);
+  task.remindersSent = (task.remindersSent||0) + 1;
+  task.lastReminder = tod();
+
+  const subject = `${escalate ? '🔴 ESCALATION' : '⏰ REMINDER'} #${task.remindersSent}: "${task.name}" — ${emp.name}${daysOver > 0 ? ` (${daysOver}d OVERDUE)` : ''}`;
+  const body = `Hi Sumesh,\n\nThis is ${escalate?'an ESCALATED':'a'} follow-up on:\n\n  Task: ${task.name}\n  Employee: ${emp.name}\n  Section: ${task.section}\n  Due: ${fmtDate(task.dueDate)}${daysOver>0?` (${daysOver} days overdue)`:''}\n  Current Stage: ${task.stage.replace(/_/g,' ').toUpperCase()}\n  Reminders Sent: ${task.remindersSent}\n\nPlease update the status or reply with progress.\n\n${escalate?'⚠️ This has been escalated to management.\n\n':''}Galaxy Pharma Onboarding System`;
+  const cc = escalate && S.settings.escEmail ? S.settings.escEmail : '';
+
+  S.emails.unshift({ id: gid(), time: now(), type: escalate?'escalation':'reminder', to: S.settings.coordEmail,
+    toName: 'Sumesh Nair', empName: emp.name, empId: emp.id, taskName: task.name,
+    subject, body, daysOverdue: daysOver, reminderNum: task.remindersSent });
+  task.log.push({ time: now(), action: escalate?'escalation':'reminder', note: `${escalate?'ESCALATION':'Reminder'} #${task.remindersSent} sent${cc?' (CC: '+cc+')':''}` });
+
+  const mailto = `mailto:${S.settings.coordEmail}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}${cc?'&cc='+encodeURIComponent(cc):''}`;
+  window.open(mailto, '_blank');
+  saveStore(); render();
+  toast(`📧 ${escalate?'Escalation':'Reminder'} sent for "${task.name}"`,'info');
+}
+
+function sendAllOverdue() {
+  let n = 0;
+  S.employees.forEach(emp => {
+    emp.tasks.forEach(t => {
+      if (t.stage === 'complete') return;
+      if (t.dueDate >= tod()) return;
+      if (t.lastReminder && dayDiff(t.lastReminder, tod()) < (S.settings.reminderFreq||2)) return;
+      sendReminder(emp.id, t.id); n++;
+    });
+  });
+  if (n === 0) toast('All caught up — no overdue reminders needed!');
+}
+
+function sendAllPending() {
+  let n = 0;
+  S.employees.forEach(emp => {
+    emp.tasks.forEach(t => {
+      if (t.stage !== 'email_sent') return;
+      if (t.lastReminder && dayDiff(t.lastReminder, tod()) < 1) return;
+      sendReminder(emp.id, t.id); n++;
+    });
+  });
+  if (n === 0) toast('No pending emails to send');
+}
+
+// ===== RENDER =====
+function render() {
+  renderDashboard(); renderPipeline(); renderTracker(); renderEmails(); renderSettings(); updateBadges();
+}
+
+function updateBadges() {
+  const overdue = S.employees.flatMap(e => e.tasks).filter(t => t.stage !== 'complete' && t.dueDate < tod()).length;
+  const b = document.getElementById('badge-pipe');
+  b.textContent = overdue; b.style.display = overdue > 0 ? 'inline-block' : 'none';
+}
+
+function renderDashboard() {
+  const all = S.employees.flatMap(e => e.tasks);
+  const total = all.length;
+  const byStage = {};
+  STAGE_ORDER.forEach(s => byStage[s] = 0);
+  all.forEach(t => {
+    if (t.stage !== 'complete' && t.dueDate < tod()) byStage.overdue++;
+    else byStage[t.stage] = (byStage[t.stage]||0) + 1;
+  });
+
+  document.getElementById('dash-stats').innerHTML = `
+    <div class="stat blue"><div class="stat-label">Total Tasks</div><div class="stat-val">${total}</div></div>
+    <div class="stat teal"><div class="stat-label">Email Sent</div><div class="stat-val">${byStage.email_sent||0}</div></div>
+    <div class="stat amber"><div class="stat-label">Awaiting Response</div><div class="stat-val">${byStage.awaiting_response||0}</div></div>
+    <div class="stat purple"><div class="stat-label">In Progress</div><div class="stat-val">${byStage.in_progress||0}</div></div>
+    <div class="stat green"><div class="stat-label">Complete</div><div class="stat-val">${byStage.complete||0}</div></div>
+    <div class="stat red"><div class="stat-label">Overdue</div><div class="stat-val">${byStage.overdue||0}</div></div>
+  `;
+
+  // Active onboardings
+  const ao = document.getElementById('dash-active');
+  const active = S.employees.filter(e => e.status === 'active');
+  if (active.length === 0) {
+    ao.innerHTML = '<p style="text-align:center; color:var(--gray-400); padding:30px;">No active onboardings. Click "+ New Hire" to start.</p>';
+  } else {
+    ao.innerHTML = active.map(e => {
+      const done = e.tasks.filter(t => t.stage==='complete').length;
+      const over = e.tasks.filter(t => t.stage!=='complete' && t.dueDate < tod()).length;
+      const pct = e.tasks.length ? Math.round(done/e.tasks.length*100) : 0;
+      return `<div style="margin-bottom:14px; cursor:pointer;" onclick="showTaskModal('${e.id}','${e.tasks[0]?.id}')">
+        <div style="display:flex; justify-content:space-between;"><div><strong>${e.name}</strong> <span style="color:var(--gray-400); font-size:12px;">${e.role}</span></div>
+        <div>${pct}% ${over>0?`<span class="badge wf-overdue">${over} overdue</span>`:''}</div></div>
+        <div class="progress-bar" style="margin-top:4px;"><div class="progress-fill" style="width:${pct}%; background:${over>0?'var(--red)':pct===100?'var(--green)':'var(--blue)'}"></div></div>
+        <div style="font-size:10px; color:var(--gray-400); margin-top:2px;">${done}/${e.tasks.length} tasks • Started ${fmtDate(e.start)} • Managed by Sumesh Nair</div>
+      </div>`;
+    }).join('');
+  }
+
+  // Attention needed
+  const attn = document.getElementById('dash-attention');
+  const overdueList = [];
+  S.employees.forEach(emp => emp.tasks.forEach(t => {
+    if (t.stage !== 'complete' && t.dueDate < tod()) overdueList.push({ ...t, empName: emp.name, empId: emp.id });
+  }));
+  overdueList.sort((a,b) => dayDiff(b.dueDate, tod()) - dayDiff(a.dueDate, tod()));
+  if (overdueList.length === 0) {
+    attn.innerHTML = '<p style="text-align:center; color:var(--green); padding:20px;">✅ Nothing overdue!</p>';
+  } else {
+    attn.innerHTML = overdueList.slice(0,20).map(t => {
+      const d = dayDiff(t.dueDate, tod());
+      return `<div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--gray-100); font-size:12px; cursor:pointer;" onclick="showTaskModal('${t.empId}','${t.id}')">
+        <div><strong>${t.name}</strong><br><span style="color:var(--gray-400)">${t.empName} • ${t.section}</span></div>
+        <div><span class="badge wf-overdue">${d}d</span></div>
+      </div>`;
+    }).join('');
+  }
+}
+
+function renderPipeline() {
+  const empF = document.getElementById('pipe-emp')?.value || 'all';
+  const secF = document.getElementById('pipe-section')?.value || 'all';
+
+  // Populate filters
+  const pe = document.getElementById('pipe-emp');
+  const cv1 = pe.value;
+  pe.innerHTML = '<option value="all">All Employees</option>' + S.employees.map(e => `<option value="${e.id}" ${cv1===e.id?'selected':''}>${e.name}</option>`).join('');
+
+  const ps = document.getElementById('pipe-section');
+  const cv2 = ps.value;
+  const secs = [...new Set(S.employees.flatMap(e => e.tasks.map(t => t.section)))];
+  ps.innerHTML = '<option value="all">All Sections</option>' + secs.map(s => `<option value="${s}" ${cv2===s?'selected':''}>${s}</option>`).join('');
+
+  // Build columns
+  const columns = {};
+  STAGE_ORDER.forEach(s => columns[s] = []);
+
+  S.employees.forEach(emp => {
+    if (empF !== 'all' && emp.id !== empF) return;
+    emp.tasks.forEach(t => {
+      if (secF !== 'all' && t.section !== secF) return;
+      const isOverdue = t.stage !== 'complete' && t.dueDate < tod();
+      const col = isOverdue ? 'overdue' : t.stage;
+      columns[col].push({ ...t, empName: emp.name, empId: emp.id });
+    });
+  });
+
+  const board = document.getElementById('pipeline-board');
+  board.innerHTML = STAGES.map(stg => {
+    const items = columns[stg.id] || [];
+    return `<div class="pipe-col">
+      <div class="pipe-col-hd" style="background:${stg.colBg}; color:${stg.colText};">${stg.icon} ${stg.label} <span class="count">${items.length}</span></div>
+      <div class="pipe-col-body">${items.length === 0 ? '<div style="text-align:center; color:var(--gray-300); font-size:11px; padding:20px;">Empty</div>' :
+        items.map(t => {
+          const daysOver = t.dueDate < tod() ? dayDiff(t.dueDate, tod()) : 0;
+          return `<div class="pipe-card ${daysOver>0?'overdue':''}" onclick="showTaskModal('${t.empId}','${t.id}')">
+            <div class="pc-emp">${t.empName}</div>
+            <div class="pc-name">${t.name}</div>
+            <div class="pc-meta"><span>${t.sectionIcon} ${fmtDate(t.dueDate)}</span><span>${daysOver>0?`${daysOver}d over`:`${t.remindersSent} rem.`}</span></div>
+          </div>`;
+        }).join('')
+      }</div>
+    </div>`;
+  }).join('');
+}
+
+function renderTracker() {
+  const empF = document.getElementById('trk-emp')?.value || 'all';
+  const stgF = document.getElementById('trk-stage')?.value || 'all';
+  const search = (document.getElementById('trk-search')?.value || '').toLowerCase();
+
+  const te = document.getElementById('trk-emp');
+  const cv = te.value;
+  te.innerHTML = '<option value="all">All Employees</option>' + S.employees.map(e => `<option value="${e.id}" ${cv===e.id?'selected':''}>${e.name}</option>`).join('');
+
+  const ts = document.getElementById('trk-stage');
+  const cv2 = ts.value;
+  ts.innerHTML = '<option value="all">All Stages</option>' + STAGES.map(s => `<option value="${s.id}" ${cv2===s.id?'selected':''}>${s.icon} ${s.label}</option>`).join('');
+
+  let rows = [];
+  S.employees.forEach(emp => {
+    if (empF !== 'all' && emp.id !== empF) return;
+    emp.tasks.forEach(t => {
+      const isOverdue = t.stage !== 'complete' && t.dueDate < tod();
+      const effectiveStage = isOverdue ? 'overdue' : t.stage;
+      if (stgF !== 'all' && effectiveStage !== stgF && t.stage !== stgF) return;
+      if (search && !t.name.toLowerCase().includes(search) && !t.section.toLowerCase().includes(search)) return;
+      rows.push({ ...t, empName: emp.name, empId: emp.id, effectiveStage });
+    });
+  });
+  rows.sort((a,b) => new Date(a.dueDate) - new Date(b.dueDate));
+
+  document.getElementById('trk-count').textContent = `${rows.length} tasks`;
+
+  const stageInfo = id => STAGES.find(s => s.id === id) || STAGES[0];
+  document.getElementById('trk-tbody').innerHTML = rows.length === 0 ?
+    '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--gray-400);">No tasks found</td></tr>' :
+    rows.map(t => {
+      const si = stageInfo(t.effectiveStage);
+      const daysOver = t.dueDate < tod() && t.stage !== 'complete' ? dayDiff(t.dueDate, tod()) : 0;
+      const lastLog = t.log[t.log.length-1];
+      return `<tr style="${daysOver>0?'background:var(--red-light)':''}">
+        <td><strong style="cursor:pointer;color:var(--blue);" onclick="showTaskModal('${t.empId}','${t.id}')">${t.name}</strong></td>
+        <td>${t.empName}</td>
+        <td style="font-size:11px;">${t.sectionIcon} ${t.section}</td>
+        <td><span class="badge wf-${t.effectiveStage}">${si.icon} ${si.label}</span></td>
+        <td>${fmtDate(t.dueDate)} ${daysOver>0?`<span class="badge wf-overdue">${daysOver}d</span>`:''}</td>
+        <td style="text-align:center;">${t.remindersSent}</td>
+        <td style="font-size:11px; color:var(--gray-400);">${lastLog ? lastLog.note.substring(0,40) : '—'}</td>
+        <td style="white-space:nowrap;">
+          <select class="btn-xs" style="padding:3px 6px; font-size:10px; border:1px solid var(--gray-300); border-radius:4px;" onchange="advanceTask('${t.empId}','${t.id}',this.value); this.value='';">
+            <option value="">Move to...</option>
+            ${STAGES.filter(s=>s.id!=='overdue').map(s=>`<option value="${s.id}">${s.icon} ${s.label}</option>`).join('')}
+          </select>
+          ${daysOver>0||t.stage==='email_sent'||t.stage==='awaiting_response'?`<button class="btn btn-red btn-xs" onclick="sendReminder('${t.empId}','${t.id}')" style="margin-left:3px;">📧</button>`:''}
+        </td>
+      </tr>`;
+    }).join('');
+}
+
+function renderEmails() {
+  const el = document.getElementById('email-log');
+  document.getElementById('email-count').textContent = `${S.emails.length} emails`;
+  if (S.emails.length === 0) {
+    el.innerHTML = '<p style="text-align:center; color:var(--gray-400); padding:20px;">No emails sent yet.</p>';
+    return;
+  }
+  el.innerHTML = S.emails.slice(0,60).map(e => {
+    const icon = e.type==='escalation'?'🔴':e.type==='initial'?'🚀':'📧';
+    const typeLabel = e.type==='escalation'?'ESCALATION':e.type==='initial'?'Initial Assignment':'Reminder';
+    return `<div style="display:flex; gap:10px; padding:10px; border-bottom:1px solid var(--gray-100);">
+      <div style="font-size:18px;">${icon}</div>
+      <div style="flex:1;">
+        <div style="font-size:13px;"><strong>${typeLabel}</strong> → ${e.toName} <span style="color:var(--gray-400);">(${e.to})</span></div>
+        <div style="font-size:12px; font-weight:600; color:var(--gray-700);">${e.subject}</div>
+        <div style="font-size:11px; color:var(--gray-400);">${e.empName} ${e.section?'• '+e.section:''} ${e.taskName?'• '+e.taskName:''} • ${fmtFull(e.time)}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+function renderSettings() {
+  document.getElementById('coord-email').value = S.settings.coordEmail || '';
+  document.getElementById('reminder-freq').value = S.settings.reminderFreq || 2;
+  document.getElementById('esc-days').value = S.settings.escDays || 5;
+  document.getElementById('esc-email').value = S.settings.escEmail || '';
+
+  document.getElementById('tmpl-preview').innerHTML = TEMPLATE.map(s =>
+    `<div style="margin-bottom:10px;"><div style="font-weight:600; font-size:13px; color:var(--navy);">${s.icon} ${s.section} <span style="color:var(--gray-400); font-weight:400;">(${s.tasks.length} tasks, due +${s.dueDays}d)</span></div>
+    <ul style="margin:2px 0 0 18px; font-size:12px; color:var(--gray-600);">${s.tasks.map(t=>`<li>${t}</li>`).join('')}</ul></div>`
+  ).join('');
+}
+
+// ===== TASK DETAIL MODAL (WORKFLOW VIEW) =====
+function showTaskModal(empId, taskId) {
+  const emp = S.employees.find(e => e.id === empId);
+  const task = emp?.tasks.find(t => t.id === taskId);
+  if (!task) return;
+
+  const isOverdue = task.stage !== 'complete' && task.dueDate < tod();
+  const daysOver = isOverdue ? dayDiff(task.dueDate, tod()) : 0;
+  const effectiveStage = isOverdue ? 'overdue' : task.stage;
+
+  document.getElementById('tm-title').textContent = task.name;
+
+  // Workflow timeline
+  const stageSeq = ['email_sent','awaiting_response','in_progress','complete'];
+  const currentIdx = stageSeq.indexOf(task.stage);
+
+  let html = `
+  <div class="task-detail">
+    <div class="td-field"><div class="td-label">Employee</div><div class="td-value">${emp.name} — ${emp.role}</div></div>
+    <div class="td-field"><div class="td-label">Section</div><div class="td-value">${task.sectionIcon} ${task.section}</div></div>
+    <div class="td-field"><div class="td-label">Due Date</div><div class="td-value">${fmtDate(task.dueDate)} ${daysOver>0?`<span class="badge wf-overdue">${daysOver} days overdue</span>`:''}</div></div>
+    <div class="td-field"><div class="td-label">Assigned To</div><div class="td-value">Sumesh Nair (${S.settings.coordEmail})</div></div>
+    <div class="td-field"><div class="td-label">Reminders Sent</div><div class="td-value">${task.remindersSent} ${task.lastReminder?'(last: '+fmtDate(task.lastReminder)+')':''}}</div></div>
+    <div class="td-field"><div class="td-label">Current Stage</div><div class="td-value"><span class="badge wf-${effectiveStage}" style="font-size:12px; padding:4px 12px;">${STAGES.find(s=>s.id===effectiveStage)?.icon} ${STAGES.find(s=>s.id===effectiveStage)?.label}</span></div></div>
+  </div>
+
+  <h3 style="font-size:14px; margin:20px 0 10px; color:var(--navy);">📍 Workflow Progress</h3>
+  <div class="wf-timeline">
+    ${stageSeq.map((stg, i) => {
+      const si = STAGES.find(s => s.id === stg);
+      const isDone = i < currentIdx || task.stage === 'complete';
+      const isCurrent = i === currentIdx && task.stage !== 'complete';
+      const cls = isDone ? 'done' : isCurrent ? 'current' : '';
+      return `<div class="wf-step ${cls}">
+        <div class="wf-dot">${isDone ? '✓' : si?.icon || '○'}</div>
+        <div class="wf-step-label">${si?.label || stg}</div>
+      </div>`;
+    }).join('')}
+  </div>
+
+  ${task.stage === 'blocked' ? `<div style="background:var(--red-light); border:1px solid var(--red); border-radius:6px; padding:10px; margin:12px 0; font-size:13px;">
+    <strong>🚫 BLOCKED</strong> — This task is flagged as blocked. Send a follow-up or update status.
+  </div>` : ''}
+
+  <h3 style="font-size:14px; margin:20px 0 10px; color:var(--navy);">📊 Move Task</h3>
+  <div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;">
+    ${STAGES.filter(s=>s.id!=='overdue').map(s =>
+      `<button class="btn btn-sm" style="background:${s.colBg}; color:${s.colText}; border:1px solid ${s.colText}20;" onclick="advanceTask('${empId}','${taskId}','${s.id}','Manually moved to ${s.label}'); showTaskModal('${empId}','${taskId}');">${s.icon} ${s.label}</button>`
+    ).join('')}
+  </div>
+
+  <div style="display:flex; gap:6px; margin-bottom:16px;">
+    <button class="btn btn-red btn-sm" onclick="sendReminder('${empId}','${taskId}')">📧 Send Reminder</button>
+    <input type="text" id="task-note-input" placeholder="Add a note..." style="flex:1; padding:6px 10px; border:1px solid var(--gray-300); border-radius:6px; font-size:12px;">
+    <button class="btn btn-outline btn-sm" onclick="addTaskNote('${empId}','${taskId}')">+ Note</button>
+  </div>
+
+  <h3 style="font-size:14px; margin:16px 0 10px; color:var(--navy);">📜 Activity Log</h3>
+  <div class="wf-log">
+    ${[...task.log].reverse().map(l => {
+      const cls = l.action.includes('complete')||l.action.includes('success')?'success':l.action.includes('escalat')||l.action.includes('overdue')?'alert':'action';
+      return `<div class="wf-log-item ${cls}"><div class="wf-log-time">${fmtFull(l.time)}</div><div class="wf-log-text">${l.note}</div></div>`;
+    }).join('')}
+  </div>`;
+
+  document.getElementById('tm-body').innerHTML = html;
+  showModal('task-modal');
+}
+
+function addTaskNote(empId, taskId) {
+  const input = document.getElementById('task-note-input');
+  const note = input?.value.trim();
+  if (!note) return;
+  const emp = S.employees.find(e => e.id === empId);
+  const task = emp?.tasks.find(t => t.id === taskId);
+  if (!task) return;
+  task.log.push({ time: now(), action: 'note', note: `📝 ${note}` });
+  saveStore();
+  showTaskModal(empId, taskId);
+  toast('Note added');
+}
+
+// ===== EXPORT / IMPORT =====
+function exportData() {
+  const blob = new Blob([JSON.stringify(S,null,2)], {type:'application/json'});
+  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
+  a.download = `GalaxyPharma_Onboarding_${tod()}.json`; a.click();
+  toast('📤 Data exported');
+}
+function importData() { document.getElementById('imp-input').click(); }
+function handleImport(e) {
+  const f = e.target.files[0]; if (!f) return;
+  const r = new FileReader();
+  r.onload = function(ev) {
+    try { const d = JSON.parse(ev.target.result); if(d.employees){S={...S,...d}; saveStore(); render(); toast('📥 Imported!');} else toast('Invalid file','err');
+    } catch(err) { toast('Parse error','err'); }
+  }; r.readAsText(f);
+}
+
+// ===== INIT =====
+loadStore();
+document.getElementById('nh-start').value = tod();
+render();
+</script>
+</body>
+</html>
