@@ -23,17 +23,19 @@ body { font-family: 'Segoe UI', -apple-system, sans-serif; background: var(--gra
 .header { background: linear-gradient(135deg, var(--navy), var(--navy-light)); color: white; padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; box-shadow: var(--shadow-lg); }
 .header h1 { font-size: 18px; font-weight: 700; }
 .header .sub { font-size: 11px; opacity: 0.6; }
-.hdr-btns { display: flex; gap: 8px; }
+.hdr-btns { display: flex; gap: 8px; align-items: center; }
 .hdr-btn { background: rgba(255,255,255,0.12); border: 1px solid rgba(255,255,255,0.2); color: white; padding: 7px 14px; border-radius: 6px; cursor: pointer; font-size: 13px; }
 .hdr-btn:hover { background: rgba(255,255,255,0.22); }
 .hdr-btn.primary { background: var(--blue); border-color: var(--blue); }
+.hdr-btn.green { background: var(--green); border-color: var(--green); }
 
-.sync-status { font-size: 10px; padding: 3px 10px; border-radius: 10px; background: rgba(255,255,255,0.15); }
-.sync-status.ok { background: rgba(16,185,129,0.3); }
-.sync-status.err { background: rgba(239,68,68,0.3); }
-.sync-status.saving { background: rgba(245,158,11,0.3); }
+.sync-status { font-size: 10px; padding: 3px 10px; border-radius: 10px; }
+.sync-status.ok { background: rgba(16,185,129,0.3); color: #d1fae5; }
+.sync-status.err { background: rgba(239,68,68,0.3); color: #fee2e2; }
+.sync-status.saving { background: rgba(245,158,11,0.3); color: #fef3c7; }
+.sync-status.pending { background: rgba(139,92,246,0.3); color: #ede9fe; }
 
-.nav { background: white; border-bottom: 1px solid var(--gray-200); display: flex; padding: 0 24px; }
+.nav { background: white; border-bottom: 1px solid var(--gray-200); display: flex; padding: 0 24px; flex-wrap: wrap; }
 .nav-tab { padding: 11px 18px; font-size: 13px; font-weight: 600; color: var(--gray-500); cursor: pointer; border-bottom: 2px solid transparent; }
 .nav-tab:hover { color: var(--gray-700); background: var(--gray-50); }
 .nav-tab.active { color: var(--blue); border-bottom-color: var(--blue); }
@@ -72,9 +74,6 @@ body { font-family: 'Segoe UI', -apple-system, sans-serif; background: var(--gra
 
 .badge { display: inline-block; padding: 2px 8px; border-radius: 10px; font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.3px; white-space: nowrap; }
 
-/* WORKFLOW STAGES */
-.wf-not-started { background: var(--gray-200); color: var(--gray-600); }
-.wf-email_queued { background: #e0e7ff; color: #3730a3; }
 .wf-email_sent { background: var(--blue-light); color: var(--blue-dark); }
 .wf-awaiting_response { background: var(--amber-light); color: #92400e; }
 .wf-in_progress { background: var(--purple-light); color: #5b21b6; }
@@ -82,7 +81,6 @@ body { font-family: 'Segoe UI', -apple-system, sans-serif; background: var(--gra
 .wf-complete { background: var(--green-light); color: #065f46; }
 .wf-overdue { background: var(--red); color: white; }
 
-/* PIPELINE VIEW */
 .pipeline { display: grid; grid-template-columns: repeat(6, 1fr); gap: 12px; min-height: 400px; }
 .pipe-col { background: var(--gray-50); border-radius: 8px; min-height: 300px; }
 .pipe-col-hd { padding: 10px 12px; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center; }
@@ -94,9 +92,7 @@ body { font-family: 'Segoe UI', -apple-system, sans-serif; background: var(--gra
 .pipe-card .pc-meta { font-size: 10px; color: var(--gray-400); display: flex; justify-content: space-between; }
 .pipe-card .pc-emp { font-size: 10px; color: var(--blue); font-weight: 600; }
 .pipe-card.overdue { border-left-color: var(--red); background: #fff5f5; }
-.pipe-card.overdue .pc-name { color: var(--red); }
 
-/* WORKFLOW DETAIL */
 .wf-timeline { display: flex; align-items: flex-start; gap: 0; margin: 16px 0; }
 .wf-step { flex: 1; text-align: center; position: relative; }
 .wf-step::after { content: ''; position: absolute; top: 16px; left: 50%; width: 100%; height: 2px; background: var(--gray-200); z-index: 0; }
@@ -120,13 +116,11 @@ body { font-family: 'Segoe UI', -apple-system, sans-serif; background: var(--gra
 .wf-log-time { font-size: 10px; color: var(--gray-400); }
 .wf-log-text { font-size: 13px; }
 
-/* TASK DETAIL PANEL */
 .task-detail { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 .td-field { margin-bottom: 12px; }
 .td-label { font-size: 11px; font-weight: 600; text-transform: uppercase; color: var(--gray-500); margin-bottom: 2px; }
 .td-value { font-size: 14px; }
 
-/* FORMS */
 .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
 .fg { margin-bottom: 14px; }
 .fg label { display: block; font-size: 12px; font-weight: 600; color: var(--gray-700); margin-bottom: 3px; }
@@ -158,31 +152,31 @@ tr:hover { background: var(--gray-50); }
 .progress-bar { background: var(--gray-200); border-radius: 4px; height: 6px; overflow: hidden; }
 .progress-fill { height: 100%; border-radius: 4px; transition: width 0.3s; }
 
-/* EMAIL QUEUE */
-.eq-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--gray-100); transition: background 0.15s; }
+.eq-item { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--gray-100); }
 .eq-item:hover { background: var(--gray-50); }
 .eq-item.sent { background: var(--green-light); }
-.eq-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
-.eq-icon.pending { background: var(--blue-light); }
-.eq-icon.sent { background: var(--green-light); }
+.eq-icon { width: 36px; height: 36px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 14px; font-weight: 700; flex-shrink: 0; }
+.eq-icon.pending { background: var(--blue-light); color: var(--blue-dark); }
+.eq-icon.sent { background: var(--green-light); color: #065f46; }
 .eq-body { flex: 1; }
 .eq-title { font-weight: 600; font-size: 13px; }
 .eq-sub { font-size: 11px; color: var(--gray-400); }
-.eq-btn { flex-shrink: 0; }
 
-/* Responsive */
+.unpublished-bar { background: #fef3c7; border: 1px solid #f59e0b; border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; font-size: 13px; }
+.unpublished-bar.hidden { display: none; }
+
 @media (max-width: 1100px) { .pipeline { grid-template-columns: repeat(3, 1fr); } }
 @media (max-width: 700px) { .pipeline { grid-template-columns: 1fr 1fr; } .form-grid { grid-template-columns: 1fr; } .task-detail { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <div class="header">
-  <div><h1>Galaxy Pharma — Onboarding Workflow Manager</h1><div class="sub">Virtual Onboarding Coordinator — All tasks managed by Sumesh Nair</div></div>
+  <div><h1>Galaxy Pharma - Onboarding Workflow Manager</h1><div class="sub">Virtual Onboarding Coordinator - All tasks managed by Sumesh Nair</div></div>
   <div class="hdr-btns">
-    <span class="sync-status" id="sync-indicator">Connecting...</span>
+    <span class="sync-status" id="sync-indicator">Loading...</span>
+    <button class="hdr-btn" onclick="refreshFromCloud()">Refresh</button>
+    <button class="hdr-btn green" id="publish-btn" onclick="publishToCloud()" style="display:none;">Publish Changes</button>
     <button class="hdr-btn" onclick="exportData()">Export</button>
-    <button class="hdr-btn" onclick="importData()">Import</button>
-    <button class="hdr-btn" onclick="shareLinkCopy()">Share Link</button>
     <button class="hdr-btn primary" onclick="showModal('new-hire-modal')">+ New Hire</button>
   </div>
 </div>
@@ -195,6 +189,11 @@ tr:hover { background: var(--gray-50); }
   <div class="nav-tab" onclick="go('settings',this)">Settings</div>
 </div>
 <div class="container">
+
+<div class="unpublished-bar hidden" id="unpublished-bar">
+  <span>You have unpublished changes. Other users won't see them until you publish.</span>
+  <button class="btn btn-amber btn-sm" onclick="publishToCloud()">Publish Now</button>
+</div>
 
 <!-- DASHBOARD -->
 <div class="page active" id="pg-dashboard">
@@ -249,8 +248,7 @@ tr:hover { background: var(--gray-50); }
     <div class="card-hd"><h2>How Individual Emails Work</h2></div>
     <div class="card-bd" style="font-size:13px; color:var(--gray-600);">
       <p><strong>Why one at a time?</strong> Browsers block multiple email windows for security. Each email must be sent individually via a user click.</p>
-      <p style="margin-top:8px;"><strong>Workflow:</strong> Click "Send" next to each section email. Your default email client (Outlook/Gmail) will open with the pre-filled email. Send it, then come back and click "Mark Sent" or send the next one.</p>
-      <p style="margin-top:8px;"><strong>Tip:</strong> Use the "Send Next Unsent Email" button at the top to quickly work through the queue.</p>
+      <p style="margin-top:8px;"><strong>Workflow:</strong> Click "Send" next to each section email. Your email client will open with the pre-filled email. Send it, come back and click "Mark Sent", then repeat for the next one.</p>
     </div>
   </div>
 </div>
@@ -279,18 +277,22 @@ tr:hover { background: var(--gray-50); }
       <div class="fg"><label>Escalation CC Email</label><input type="email" id="esc-email" value="dalbir.bains@galaxypharma.net" onchange="updateSettings()"></div>
     </div>
   </div></div>
-  <div class="card"><div class="card-hd"><h2>Cloud Sync</h2></div><div class="card-bd">
-    <p style="font-size:13px; color:var(--gray-600); margin-bottom:10px;">Data is stored in a shared cloud backend. Anyone with the link sees the same data. Auto-syncs every 30 seconds.</p>
-    <div style="display:flex; gap:8px; align-items:center;">
-      <span style="font-size:12px; color:var(--gray-500);">Blob ID:</span>
-      <code id="blob-id-display" style="font-size:12px; background:var(--gray-100); padding:4px 8px; border-radius:4px;">—</code>
-      <button class="btn btn-outline btn-sm" onclick="cloudSync()">Force Sync Now</button>
+  <div class="card"><div class="card-hd"><h2>Cloud Sync (GitHub)</h2></div><div class="card-bd">
+    <p style="font-size:13px; color:var(--gray-600); margin-bottom:12px;">Data is stored in the GitHub repo. <strong>All users can view</strong> the latest published data. To make edits and publish, enter a GitHub Personal Access Token below (admin only).</p>
+    <div class="fg">
+      <label>GitHub Personal Access Token (admin only - for publishing changes)</label>
+      <input type="password" id="gh-token" placeholder="ghp_xxxxxxxxxxxx" onchange="saveToken()">
+      <div style="font-size:11px; color:var(--gray-400); margin-top:4px;">Generate at github.com/settings/tokens. Needs "repo" or "contents:write" permission for dalbirbains4-cmd/galaxy-onboarding. Token is stored in YOUR browser only, never shared.</div>
+    </div>
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <button class="btn btn-blue btn-sm" onclick="refreshFromCloud()">Pull Latest Data</button>
+      <button class="btn btn-green btn-sm" onclick="publishToCloud()">Publish Changes</button>
     </div>
   </div></div>
   <div class="card"><div class="card-hd"><h2>Onboarding Template (49 Tasks)</h2></div><div class="card-bd" id="tmpl-preview"></div></div>
 </div>
 
-</div><!-- /container -->
+</div>
 
 <!-- NEW HIRE MODAL -->
 <div class="modal-overlay" id="new-hire-modal">
@@ -306,7 +308,7 @@ tr:hover { background: var(--gray-50); }
         <option value="Facility Manager">Facility Manager</option><option value="Facility Engineer">Facility Engineer</option>
         <option value="Project Manager">Project Manager</option><option value="IT Administrator">IT Administrator</option>
         <option value="Production Technician">Production Technician (cGMP)</option>
-        <option value="cGMP Pharmacist">cGMP Pharmacist</option><option value="Staff Pharmacist — PIC Track">Staff Pharmacist — PIC Track</option>
+        <option value="cGMP Pharmacist">cGMP Pharmacist</option><option value="Staff Pharmacist - PIC Track">Staff Pharmacist - PIC Track</option>
         <option value="Quality Assurance">Quality Assurance</option><option value="Validation Specialist">Validation Specialist</option>
         <option value="Consultant">Consultant</option><option value="Other">Other</option>
       </select></div>
@@ -320,7 +322,7 @@ tr:hover { background: var(--gray-50); }
   </div>
   <div class="modal-ft">
     <button class="btn btn-outline" onclick="hideModal('new-hire-modal')">Cancel</button>
-    <button class="btn btn-blue" onclick="createHire()">Launch Onboarding &mdash; Queue All Emails</button>
+    <button class="btn btn-blue" onclick="createHire()">Launch Onboarding - Queue All Emails</button>
   </div>
 </div></div>
 
@@ -341,9 +343,9 @@ tr:hover { background: var(--gray-50); }
     <div class="fg"><label>Body</label><textarea id="ec-body" readonly rows="10" style="background:var(--gray-50); font-family:monospace; font-size:12px;"></textarea></div>
   </div>
   <div class="modal-ft">
-    <button class="btn btn-outline" onclick="copyEmailBody()">Copy Body to Clipboard</button>
-    <button class="btn btn-blue" id="ec-open-btn" onclick="">Open in Email Client</button>
-    <button class="btn btn-green" id="ec-mark-btn" onclick="">Mark as Sent</button>
+    <button class="btn btn-outline" onclick="copyEmailBody()">Copy to Clipboard</button>
+    <button class="btn btn-blue" id="ec-open-btn">Open in Email Client</button>
+    <button class="btn btn-green" id="ec-mark-btn">Mark as Sent</button>
   </div>
 </div></div>
 
@@ -351,19 +353,26 @@ tr:hover { background: var(--gray-50); }
 <input type="file" id="imp-input" accept=".json" style="display:none" onchange="handleImport(event)">
 
 <script>
-// ===== WORKFLOW STAGES =====
-const STAGES = [
-  { id: 'email_sent', label: 'Email Sent', icon: 'S', color: 'blue', colBg: '#dbeafe', colText: '#1e40af' },
-  { id: 'awaiting_response', label: 'Awaiting Response', icon: 'W', color: 'amber', colBg: '#fef3c7', colText: '#92400e' },
-  { id: 'in_progress', label: 'In Progress', icon: 'P', color: 'purple', colBg: '#ede9fe', colText: '#5b21b6' },
-  { id: 'blocked', label: 'Blocked', icon: 'B', color: 'red', colBg: '#fee2e2', colText: '#991b1b' },
-  { id: 'complete', label: 'Complete', icon: 'OK', color: 'green', colBg: '#d1fae5', colText: '#065f46' },
-  { id: 'overdue', label: 'Overdue', icon: '!!', color: 'red', colBg: '#fee2e2', colText: '#991b1b' },
-];
-const STAGE_ORDER = ['email_sent','awaiting_response','in_progress','blocked','complete','overdue'];
+// ===== CONFIG =====
+var REPO_OWNER = 'dalbirbains4-cmd';
+var REPO_NAME = 'galaxy-onboarding';
+var DATA_FILE = 'data.json';
+var GITHUB_API = 'https://api.github.com/repos/' + REPO_OWNER + '/' + REPO_NAME + '/contents/' + DATA_FILE;
+var RAW_URL = 'https://raw.githubusercontent.com/' + REPO_OWNER + '/' + REPO_NAME + '/master/' + DATA_FILE;
 
-// ===== ONBOARDING TEMPLATE =====
-const TEMPLATE = [
+// ===== STAGES =====
+var STAGES = [
+  { id: 'email_sent', label: 'Email Sent', icon: 'ES', colBg: '#dbeafe', colText: '#1e40af' },
+  { id: 'awaiting_response', label: 'Awaiting Response', icon: 'AR', colBg: '#fef3c7', colText: '#92400e' },
+  { id: 'in_progress', label: 'In Progress', icon: 'IP', colBg: '#ede9fe', colText: '#5b21b6' },
+  { id: 'blocked', label: 'Blocked', icon: 'BL', colBg: '#fee2e2', colText: '#991b1b' },
+  { id: 'complete', label: 'Complete', icon: 'OK', colBg: '#d1fae5', colText: '#065f46' },
+  { id: 'overdue', label: 'Overdue', icon: '!!', colBg: '#fee2e2', colText: '#991b1b' }
+];
+var STAGE_ORDER = ['email_sent','awaiting_response','in_progress','blocked','complete','overdue'];
+
+// ===== TEMPLATE =====
+var TEMPLATE = [
   { section: "Day 1 - Initial Orientation", icon: "IO", dueDays: 0, tasks: [
     "Facility Tour","Organizational Overview","Company Policies (HR, IT, Quality, Facility Manual)",
     "Issue Scrubs / Lab Coats","Assign Designated Workspace","Card Access / Keys / Security Setup",
@@ -383,8 +392,8 @@ const TEMPLATE = [
     "cGMP Gowning Competency Assessment","Cleanroom Cleaning Competency Assessment"
   ]},
   { section: "Week 2-3 - USP Standards", icon: "USP", dueDays: 15, tasks: [
-    "USP <795> - Nonsterile Compounding","USP <797> - Sterile Compounding",
-    "USP <800> - Hazardous Drug Handling","USP <825> - Radiopharmaceuticals (if applicable)"
+    "USP 795 - Nonsterile Compounding","USP 797 - Sterile Compounding",
+    "USP 800 - Hazardous Drug Handling","USP 825 - Radiopharmaceuticals (if applicable)"
   ]},
   { section: "Week 3 - Federal & DEA", icon: "DEA", dueDays: 20, tasks: [
     "DEA Compliance Overview","Controlled Substance Storage & Documentation",
@@ -405,193 +414,155 @@ const TEMPLATE = [
   ]}
 ];
 
-// ===== DATA =====
-let S = { employees: [], emails: [], emailQueue: [], settings: { coordEmail: 'sumesh.nair@galaxypharma.net', reminderFreq: 2, escDays: 5, escEmail: 'dalbir.bains@galaxypharma.net' }};
-let BLOB_ID = null;
-let syncTimer = null;
-let saving = false;
-
-// ===== CLOUD BACKEND (jsonblob.com) =====
-const BLOB_API = 'https://jsonblob.com/api/jsonBlob';
-
-async function cloudInit() {
-  setSyncStatus('Connecting...', '');
-  // Check URL hash for blob ID
-  const hash = window.location.hash.replace('#','');
-  if (hash && hash.length > 5) {
-    BLOB_ID = hash;
-    await cloudLoad();
-  } else {
-    // Check localStorage for a blob ID
-    const stored = localStorage.getItem('gp_blob_id');
-    if (stored) {
-      BLOB_ID = stored;
-      await cloudLoad();
-    } else {
-      // Create new blob
-      await cloudCreate();
-    }
-  }
-  document.getElementById('blob-id-display').textContent = BLOB_ID || '—';
-  // Auto-sync every 30s
-  syncTimer = setInterval(cloudSync, 30000);
-}
-
-async function cloudCreate() {
-  try {
-    const resp = await fetch(BLOB_API, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(S)
-    });
-    if (resp.ok) {
-      const loc = resp.headers.get('Location') || resp.headers.get('location');
-      if (loc) {
-        BLOB_ID = loc.split('/').pop();
-      } else {
-        // Fallback: try X-Jsonblob header
-        const xb = resp.headers.get('X-Jsonblob');
-        if (xb) BLOB_ID = xb;
-      }
-      if (BLOB_ID) {
-        localStorage.setItem('gp_blob_id', BLOB_ID);
-        window.location.hash = BLOB_ID;
-        setSyncStatus('Cloud connected', 'ok');
-      }
-    }
-  } catch (e) {
-    console.error('Cloud create failed:', e);
-    setSyncStatus('Offline mode', 'err');
-    // Fallback to localStorage
-    loadLocal();
-  }
-}
-
-async function cloudLoad() {
-  try {
-    const resp = await fetch(BLOB_API + '/' + BLOB_ID, {
-      headers: { 'Accept': 'application/json' }
-    });
-    if (resp.ok) {
-      const data = await resp.json();
-      if (data && (data.employees || data.settings)) {
-        S = { employees: [], emails: [], emailQueue: [], settings: S.settings, ...data };
-        // Ensure emailQueue exists (migration from v2)
-        if (!S.emailQueue) S.emailQueue = [];
-      }
-      localStorage.setItem('gp_blob_id', BLOB_ID);
-      window.location.hash = BLOB_ID;
-      setSyncStatus('Cloud connected', 'ok');
-    } else if (resp.status === 404) {
-      // Blob not found, create new
-      BLOB_ID = null;
-      localStorage.removeItem('gp_blob_id');
-      await cloudCreate();
-    }
-  } catch (e) {
-    console.error('Cloud load failed:', e);
-    setSyncStatus('Offline mode', 'err');
-    loadLocal();
-  }
-}
-
-async function cloudSave() {
-  if (!BLOB_ID || saving) return;
-  saving = true;
-  setSyncStatus('Saving...', 'saving');
-  try {
-    const resp = await fetch(BLOB_API + '/' + BLOB_ID, {
-      method: 'PUT',
-      headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
-      body: JSON.stringify(S)
-    });
-    if (resp.ok) {
-      setSyncStatus('Saved', 'ok');
-      // Also save local backup
-      localStorage.setItem('gp_onboard_v3_backup', JSON.stringify(S));
-    } else {
-      setSyncStatus('Save failed', 'err');
-    }
-  } catch (e) {
-    console.error('Cloud save failed:', e);
-    setSyncStatus('Offline', 'err');
-    localStorage.setItem('gp_onboard_v3_backup', JSON.stringify(S));
-  }
-  saving = false;
-}
-
-async function cloudSync() {
-  if (!BLOB_ID) return;
-  try {
-    const resp = await fetch(BLOB_API + '/' + BLOB_ID, {
-      headers: { 'Accept': 'application/json' }
-    });
-    if (resp.ok) {
-      const data = await resp.json();
-      if (data && data.employees) {
-        S = { employees: [], emails: [], emailQueue: [], settings: S.settings, ...data };
-        if (!S.emailQueue) S.emailQueue = [];
-        render();
-        setSyncStatus('Synced', 'ok');
-      }
-    }
-  } catch(e) {
-    setSyncStatus('Sync failed', 'err');
-  }
-}
-
-function loadLocal() {
-  const s = localStorage.getItem('gp_onboard_v3_backup') || localStorage.getItem('gp_onboard_v2');
-  if (s) {
-    try {
-      const d = JSON.parse(s);
-      S = { employees: [], emails: [], emailQueue: [], settings: S.settings, ...d };
-      if (!S.emailQueue) S.emailQueue = [];
-    } catch(e) {}
-  }
-}
-
-function saveStore() {
-  cloudSave();
-}
-
-function setSyncStatus(text, cls) {
-  const el = document.getElementById('sync-indicator');
-  el.textContent = text;
-  el.className = 'sync-status ' + (cls || '');
-}
+// ===== STATE =====
+var S = { employees: [], emails: [], emailQueue: [], settings: { coordEmail: 'sumesh.nair@galaxypharma.net', reminderFreq: 2, escDays: 5, escEmail: 'dalbir.bains@galaxypharma.net' }};
+var hasUnpublished = false;
+var fileSha = null; // needed for GitHub API updates
 
 // ===== UTILS =====
-const gid = () => 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2,5);
-const tod = () => new Date().toISOString().split('T')[0];
-const addD = (d, n) => { const x = new Date(d); x.setDate(x.getDate()+n); return x.toISOString().split('T')[0]; };
-const dayDiff = (a, b) => Math.floor((new Date(b) - new Date(a)) / 86400000);
-const fmtDate = d => d ? new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '—';
-const fmtFull = d => d ? new Date(d).toLocaleString() : '—';
-const nowISO = () => new Date().toISOString();
+function gid() { return 'id_' + Date.now() + '_' + Math.random().toString(36).substr(2,5); }
+function tod() { return new Date().toISOString().split('T')[0]; }
+function addD(d, n) { var x = new Date(d); x.setDate(x.getDate()+n); return x.toISOString().split('T')[0]; }
+function dayDiff(a, b) { return Math.floor((new Date(b) - new Date(a)) / 86400000); }
+function fmtDate(d) { return d ? new Date(d+'T00:00:00').toLocaleDateString('en-US',{month:'short',day:'numeric'}) : '-'; }
+function fmtFull(d) { return d ? new Date(d).toLocaleString() : '-'; }
+function nowISO() { return new Date().toISOString(); }
 
-function toast(m, t='ok') {
-  const c = document.getElementById('toast-c'), d = document.createElement('div');
+function toast(m, t) {
+  t = t || 'ok';
+  var c = document.getElementById('toast-c'), d = document.createElement('div');
   d.className = 'toast ' + t; d.textContent = m; c.appendChild(d);
-  setTimeout(() => d.remove(), 4000);
+  setTimeout(function(){ d.remove(); }, 4000);
 }
 function showModal(id) { document.getElementById(id).classList.add('show'); }
 function hideModal(id) { document.getElementById(id).classList.remove('show'); }
 
 function go(page, el) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+  var pages = document.querySelectorAll('.page');
+  for (var i = 0; i < pages.length; i++) pages[i].classList.remove('active');
+  var tabs = document.querySelectorAll('.nav-tab');
+  for (var i = 0; i < tabs.length; i++) tabs[i].classList.remove('active');
   document.getElementById('pg-'+page).classList.add('active');
   if (el) el.classList.add('active');
   render();
 }
 
-function shareLinkCopy() {
-  const url = window.location.origin + window.location.pathname + '#' + (BLOB_ID || '');
-  navigator.clipboard.writeText(url).then(() => {
-    toast('Share link copied! Anyone with this link sees the same data.', 'info');
-  }).catch(() => {
-    prompt('Copy this link to share:', url);
+function setSyncStatus(text, cls) {
+  var el = document.getElementById('sync-indicator');
+  el.textContent = text;
+  el.className = 'sync-status ' + (cls || '');
+}
+
+function markDirty() {
+  hasUnpublished = true;
+  localStorage.setItem('gp_onboard_v4', JSON.stringify(S));
+  document.getElementById('unpublished-bar').classList.remove('hidden');
+  document.getElementById('publish-btn').style.display = '';
+  setSyncStatus('Unpublished changes', 'pending');
+}
+
+// ===== GITHUB CLOUD BACKEND =====
+function refreshFromCloud() {
+  setSyncStatus('Loading...', 'saving');
+  // Use raw.githubusercontent.com with cache bust
+  var url = RAW_URL + '?t=' + Date.now();
+  fetch(url).then(function(resp) {
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return resp.json();
+  }).then(function(data) {
+    if (data && data.employees) {
+      S = { employees: [], emails: [], emailQueue: [], settings: S.settings };
+      if (data.employees) S.employees = data.employees;
+      if (data.emails) S.emails = data.emails;
+      if (data.emailQueue) S.emailQueue = data.emailQueue;
+      if (data.settings) S.settings = data.settings;
+      localStorage.setItem('gp_onboard_v4', JSON.stringify(S));
+      hasUnpublished = false;
+      document.getElementById('unpublished-bar').classList.add('hidden');
+      document.getElementById('publish-btn').style.display = 'none';
+      setSyncStatus('Up to date', 'ok');
+      render();
+      toast('Data loaded from cloud');
+    }
+  }).catch(function(e) {
+    console.error('Cloud load failed:', e);
+    // Try loading from localStorage
+    loadLocal();
+    setSyncStatus('Using local data', 'err');
+    render();
+  });
+}
+
+function loadLocal() {
+  var s = localStorage.getItem('gp_onboard_v4');
+  if (s) {
+    try {
+      var d = JSON.parse(s);
+      S = { employees: [], emails: [], emailQueue: [], settings: S.settings };
+      if (d.employees) S.employees = d.employees;
+      if (d.emails) S.emails = d.emails;
+      if (d.emailQueue) S.emailQueue = d.emailQueue;
+      if (d.settings) S.settings = d.settings;
+    } catch(e) {}
+  }
+}
+
+function getToken() {
+  return localStorage.getItem('gp_gh_token') || '';
+}
+function saveToken() {
+  var t = document.getElementById('gh-token').value.trim();
+  localStorage.setItem('gp_gh_token', t);
+  toast('Token saved (stored in your browser only)', 'info');
+}
+
+function publishToCloud() {
+  var token = getToken();
+  if (!token) {
+    toast('Enter a GitHub token in Settings first', 'err');
+    go('settings', document.querySelectorAll('.nav-tab')[5]);
+    return;
+  }
+
+  setSyncStatus('Publishing...', 'saving');
+  var content = btoa(unescape(encodeURIComponent(JSON.stringify(S, null, 2))));
+
+  // First get current SHA
+  fetch(GITHUB_API, {
+    headers: { 'Authorization': 'token ' + token, 'Accept': 'application/vnd.github.v3+json' }
+  }).then(function(resp) {
+    if (resp.ok) return resp.json();
+    if (resp.status === 404) return null;
+    throw new Error('HTTP ' + resp.status);
+  }).then(function(fileData) {
+    var body = {
+      message: 'Update onboarding data - ' + new Date().toLocaleString(),
+      content: content
+    };
+    if (fileData && fileData.sha) body.sha = fileData.sha;
+
+    return fetch(GITHUB_API, {
+      method: 'PUT',
+      headers: {
+        'Authorization': 'token ' + token,
+        'Accept': 'application/vnd.github.v3+json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(body)
+    });
+  }).then(function(resp) {
+    if (!resp.ok) throw new Error('HTTP ' + resp.status);
+    return resp.json();
+  }).then(function(result) {
+    hasUnpublished = false;
+    document.getElementById('unpublished-bar').classList.add('hidden');
+    document.getElementById('publish-btn').style.display = 'none';
+    setSyncStatus('Published', 'ok');
+    toast('Changes published to cloud! Other users will see them within 1-2 minutes.');
+  }).catch(function(e) {
+    console.error('Publish failed:', e);
+    setSyncStatus('Publish failed', 'err');
+    toast('Publish failed: ' + e.message + '. Check your token in Settings.', 'err');
   });
 }
 
@@ -600,31 +571,30 @@ function updateSettings() {
   S.settings.reminderFreq = parseInt(document.getElementById('reminder-freq').value);
   S.settings.escDays = parseInt(document.getElementById('esc-days').value);
   S.settings.escEmail = document.getElementById('esc-email').value;
-  saveStore();
+  markDirty();
 }
 
 // ===== CREATE HIRE =====
 function createHire() {
-  const name = document.getElementById('nh-name').value.trim();
-  const role = document.getElementById('nh-role').value;
-  const start = document.getElementById('nh-start').value;
+  var name = document.getElementById('nh-name').value.trim();
+  var role = document.getElementById('nh-role').value;
+  var start = document.getElementById('nh-start').value;
   if (!name || !role || !start) { toast('Fill in Name, Role, and Start Date','err'); return; }
 
-  const emp = {
-    id: gid(), name, role, start,
+  var emp = {
+    id: gid(), name: name, role: role, start: start,
     email: document.getElementById('nh-email').value.trim(),
     dept: document.getElementById('nh-dept').value,
     notes: document.getElementById('nh-notes').value.trim(),
     created: nowISO(), status: 'active', tasks: []
   };
 
-  // Generate ALL tasks — ALL concurrent, ALL assigned to Sumesh
-  TEMPLATE.forEach(sec => {
-    sec.tasks.forEach(taskName => {
+  TEMPLATE.forEach(function(sec) {
+    sec.tasks.forEach(function(taskName) {
       emp.tasks.push({
         id: gid(), name: taskName, section: sec.section, sectionIcon: sec.icon,
         dueDate: addD(start, sec.dueDays),
-        stage: 'email_sent', // All start immediately
+        stage: 'email_sent',
         assignee: 'Sumesh Nair',
         assigneeEmail: S.settings.coordEmail,
         remindersSent: 0, lastReminder: null,
@@ -635,57 +605,48 @@ function createHire() {
 
   S.employees.push(emp);
 
-  // Create INDIVIDUAL emails for each section in the queue
-  const sections = {};
-  emp.tasks.forEach(t => {
+  // Create individual emails for each section
+  var sections = {};
+  emp.tasks.forEach(function(t) {
     if (!sections[t.section]) sections[t.section] = [];
     sections[t.section].push(t);
   });
 
-  Object.entries(sections).forEach(([sec, tasks]) => {
-    const taskList = tasks.map(t => '  - ' + t.name + ' (due ' + fmtDate(t.dueDate) + ')').join('\n');
-    const subject = 'ACTION REQUIRED: ' + sec + ' - ' + emp.name + ' (' + emp.role + ')';
-    const body = 'Hi Sumesh,\n\n' + emp.name + ' is joining Galaxy Pharma as ' + emp.role + ' starting ' + fmtDate(emp.start) + '.\n\nThe following ' + tasks.length + ' tasks require your action:\n\n' + taskList + '\n\nPlease complete each task and reply to confirm progress.\nOverdue tasks will trigger escalation reminders.\n\nThank you,\nGalaxy Pharma Onboarding System';
+  var sectionEntries = Object.keys(sections);
+  sectionEntries.forEach(function(sec) {
+    var tasks = sections[sec];
+    var taskList = tasks.map(function(t) { return '  - ' + t.name + ' (due ' + fmtDate(t.dueDate) + ')'; }).join('\n');
+    var subject = 'ACTION REQUIRED: ' + sec + ' - ' + emp.name + ' (' + emp.role + ')';
+    var body = 'Hi Sumesh,\n\n' + emp.name + ' is joining Galaxy Pharma as ' + emp.role + ' starting ' + fmtDate(emp.start) + '.\n\nThe following ' + tasks.length + ' tasks require your action:\n\n' + taskList + '\n\nPlease complete each task and reply to confirm progress.\nOverdue tasks will trigger escalation reminders.\n\nThank you,\nGalaxy Pharma Onboarding System';
 
     S.emailQueue.push({
-      id: gid(),
-      created: nowISO(),
-      empId: emp.id,
-      empName: emp.name,
-      section: sec,
-      to: S.settings.coordEmail,
-      toName: 'Sumesh Nair',
-      subject: subject,
-      body: body,
-      taskCount: tasks.length,
-      taskIds: tasks.map(t => t.id),
-      sent: false,
-      sentAt: null,
-      type: 'initial'
+      id: gid(), created: nowISO(), empId: emp.id, empName: emp.name,
+      section: sec, to: S.settings.coordEmail, toName: 'Sumesh Nair',
+      subject: subject, body: body, taskCount: tasks.length,
+      taskIds: tasks.map(function(t){ return t.id; }),
+      sent: false, sentAt: null, type: 'initial'
     });
   });
 
-  saveStore();
+  markDirty();
   hideModal('new-hire-modal');
-  ['nh-name','nh-email','nh-notes'].forEach(x => document.getElementById(x).value = '');
+  ['nh-name','nh-email','nh-notes'].forEach(function(x) { document.getElementById(x).value = ''; });
   document.getElementById('nh-role').value = '';
-
-  toast(name + ' onboarded - ' + emp.tasks.length + ' tasks created, 9 emails queued!');
+  toast(name + ' onboarded - ' + emp.tasks.length + ' tasks created, ' + sectionEntries.length + ' emails queued!');
   go('emails', document.querySelectorAll('.nav-tab')[3]);
 }
 
 // ===== EMAIL QUEUE =====
 function renderEmailQueue() {
-  const list = document.getElementById('email-queue-list');
-  const queue = S.emailQueue || [];
-  const sentCount = queue.filter(e => e.sent).length;
-  const totalCount = queue.length;
+  var list = document.getElementById('email-queue-list');
+  var queue = S.emailQueue || [];
+  var sentCount = 0;
+  queue.forEach(function(e) { if (e.sent) sentCount++; });
 
-  document.getElementById('eq-progress').textContent = totalCount > 0 ? sentCount + '/' + totalCount + ' sent' : 'No emails queued';
+  document.getElementById('eq-progress').textContent = queue.length > 0 ? sentCount + '/' + queue.length + ' sent' : 'No emails queued';
 
-  // Update badge
-  const unsent = totalCount - sentCount;
-  const badge = document.getElementById('badge-emails');
+  var unsent = queue.length - sentCount;
+  var badge = document.getElementById('badge-emails');
   badge.textContent = unsent;
   badge.style.display = unsent > 0 ? 'inline-block' : 'none';
 
@@ -694,19 +655,14 @@ function renderEmailQueue() {
     return;
   }
 
-  list.innerHTML = queue.map((eq, idx) => {
-    const sentClass = eq.sent ? 'sent' : '';
-    const iconClass = eq.sent ? 'sent' : 'pending';
-    const iconText = eq.sent ? 'OK' : (idx + 1);
-    const sentInfo = eq.sent ? 'Sent ' + fmtFull(eq.sentAt) : 'Pending';
-
-    return '<div class="eq-item ' + sentClass + '">' +
-      '<div class="eq-icon ' + iconClass + '">' + iconText + '</div>' +
+  list.innerHTML = queue.map(function(eq, idx) {
+    return '<div class="eq-item ' + (eq.sent ? 'sent' : '') + '">' +
+      '<div class="eq-icon ' + (eq.sent ? 'sent' : 'pending') + '">' + (eq.sent ? 'OK' : (idx + 1)) + '</div>' +
       '<div class="eq-body">' +
         '<div class="eq-title">' + eq.section + '</div>' +
-        '<div class="eq-sub">' + eq.empName + ' &middot; ' + eq.taskCount + ' tasks &middot; To: ' + eq.toName + ' (' + eq.to + ') &middot; ' + sentInfo + '</div>' +
+        '<div class="eq-sub">' + eq.empName + ' | ' + eq.taskCount + ' tasks | To: ' + eq.toName + ' (' + eq.to + ') | ' + (eq.sent ? 'Sent ' + fmtFull(eq.sentAt) : 'Pending') + '</div>' +
       '</div>' +
-      '<div class="eq-btn">' +
+      '<div>' +
         (eq.sent
           ? '<span class="badge wf-complete">Sent</span>'
           : '<button class="btn btn-blue btn-sm" onclick="openEmailCompose(\'' + eq.id + '\')">Send</button>'
@@ -717,7 +673,10 @@ function renderEmailQueue() {
 }
 
 function openEmailCompose(queueId) {
-  const eq = S.emailQueue.find(e => e.id === queueId);
+  var eq = null;
+  for (var i = 0; i < S.emailQueue.length; i++) {
+    if (S.emailQueue[i].id === queueId) { eq = S.emailQueue[i]; break; }
+  }
   if (!eq) return;
 
   document.getElementById('ec-title').textContent = 'Send: ' + eq.section;
@@ -725,168 +684,160 @@ function openEmailCompose(queueId) {
   document.getElementById('ec-subject').value = eq.subject;
   document.getElementById('ec-body').value = eq.body;
 
-  const mailto = 'mailto:' + eq.to + '?subject=' + encodeURIComponent(eq.subject) + '&body=' + encodeURIComponent(eq.body);
-
-  document.getElementById('ec-open-btn').onclick = function() {
-    window.location.href = mailto;
-  };
-  document.getElementById('ec-mark-btn').onclick = function() {
-    markEmailSent(queueId);
-    hideModal('email-compose-modal');
-  };
+  var mailto = 'mailto:' + eq.to + '?subject=' + encodeURIComponent(eq.subject) + '&body=' + encodeURIComponent(eq.body);
+  document.getElementById('ec-open-btn').onclick = function() { window.location.href = mailto; };
+  document.getElementById('ec-mark-btn').onclick = function() { markEmailSent(queueId); hideModal('email-compose-modal'); };
 
   showModal('email-compose-modal');
 }
 
 function markEmailSent(queueId) {
-  const eq = S.emailQueue.find(e => e.id === queueId);
+  var eq = null;
+  for (var i = 0; i < S.emailQueue.length; i++) {
+    if (S.emailQueue[i].id === queueId) { eq = S.emailQueue[i]; break; }
+  }
   if (!eq) return;
   eq.sent = true;
   eq.sentAt = nowISO();
 
-  // Log in email history
   S.emails.unshift({
     id: gid(), time: nowISO(), type: 'initial', to: eq.to, toName: eq.toName,
     empName: eq.empName, empId: eq.empId, section: eq.section,
     subject: eq.subject, body: eq.body, taskCount: eq.taskCount
   });
 
-  // Update task logs
-  const emp = S.employees.find(e => e.id === eq.empId);
+  var emp = null;
+  for (var i = 0; i < S.employees.length; i++) {
+    if (S.employees[i].id === eq.empId) { emp = S.employees[i]; break; }
+  }
   if (emp && eq.taskIds) {
-    eq.taskIds.forEach(tid => {
-      const task = emp.tasks.find(t => t.id === tid);
-      if (task) {
-        task.log.push({ time: nowISO(), action: 'email_sent', note: 'Initial assignment email sent to Sumesh Nair' });
+    eq.taskIds.forEach(function(tid) {
+      for (var j = 0; j < emp.tasks.length; j++) {
+        if (emp.tasks[j].id === tid) {
+          emp.tasks[j].log.push({ time: nowISO(), action: 'email_sent', note: 'Initial assignment email sent to Sumesh Nair' });
+          break;
+        }
       }
     });
   }
 
-  saveStore();
+  markDirty();
   render();
-  toast('Email marked as sent: ' + eq.section, 'ok');
+  toast('Email marked as sent: ' + eq.section);
 }
 
 function sendNextEmail() {
-  const next = (S.emailQueue || []).find(e => !e.sent);
-  if (!next) {
-    toast('All emails have been sent!', 'info');
-    return;
+  var next = null;
+  for (var i = 0; i < (S.emailQueue || []).length; i++) {
+    if (!S.emailQueue[i].sent) { next = S.emailQueue[i]; break; }
   }
+  if (!next) { toast('All emails have been sent!', 'info'); return; }
   openEmailCompose(next.id);
 }
 
 function copyEmailBody() {
-  const body = document.getElementById('ec-body').value;
-  const subject = document.getElementById('ec-subject').value;
-  const text = 'Subject: ' + subject + '\n\n' + body;
-  navigator.clipboard.writeText(text).then(() => {
-    toast('Email content copied to clipboard!', 'info');
-  }).catch(() => {
-    // Fallback: select the textarea
-    const ta = document.getElementById('ec-body');
-    ta.select();
-    document.execCommand('copy');
+  var body = document.getElementById('ec-body').value;
+  var subject = document.getElementById('ec-subject').value;
+  var text = 'Subject: ' + subject + '\n\n' + body;
+  if (navigator.clipboard) {
+    navigator.clipboard.writeText(text).then(function() { toast('Copied!', 'info'); });
+  } else {
+    var ta = document.getElementById('ec-body'); ta.select(); document.execCommand('copy');
     toast('Copied!', 'info');
-  });
+  }
 }
 
-// ===== ADVANCE TASK STAGE =====
+// ===== ADVANCE TASK =====
 function advanceTask(empId, taskId, newStage, note) {
-  const emp = S.employees.find(e => e.id === empId);
-  const task = emp && emp.tasks.find(t => t.id === taskId);
+  var emp = null, task = null;
+  for (var i = 0; i < S.employees.length; i++) {
+    if (S.employees[i].id === empId) { emp = S.employees[i]; break; }
+  }
+  if (!emp) return;
+  for (var j = 0; j < emp.tasks.length; j++) {
+    if (emp.tasks[j].id === taskId) { task = emp.tasks[j]; break; }
+  }
   if (!task) return;
-  const oldStage = task.stage;
+  var oldStage = task.stage;
   task.stage = newStage;
   task.log.push({ time: nowISO(), action: 'stage_' + newStage, note: note || 'Stage changed: ' + oldStage + ' -> ' + newStage });
   if (newStage === 'complete') task.completedDate = tod();
 
-  if (emp.tasks.every(t => t.stage === 'complete')) {
-    emp.status = 'complete';
-    toast(emp.name + ' - Onboarding 100% COMPLETE!');
-  }
-  saveStore();
+  var allDone = true;
+  for (var k = 0; k < emp.tasks.length; k++) { if (emp.tasks[k].stage !== 'complete') { allDone = false; break; } }
+  if (allDone) { emp.status = 'complete'; toast(emp.name + ' - Onboarding 100% COMPLETE!'); }
+
+  markDirty();
   render();
 }
 
-// ===== SEND REMINDER =====
+// ===== REMINDERS =====
 function sendReminder(empId, taskId) {
-  const emp = S.employees.find(e => e.id === empId);
-  const task = emp && emp.tasks.find(t => t.id === taskId);
+  var emp = null, task = null;
+  for (var i = 0; i < S.employees.length; i++) { if (S.employees[i].id === empId) { emp = S.employees[i]; break; } }
+  if (!emp) return;
+  for (var j = 0; j < emp.tasks.length; j++) { if (emp.tasks[j].id === taskId) { task = emp.tasks[j]; break; } }
   if (!task) return;
-  const daysOver = task.dueDate < tod() ? dayDiff(task.dueDate, tod()) : 0;
-  const escalate = daysOver >= (S.settings.escDays || 5);
+
+  var daysOver = task.dueDate < tod() ? dayDiff(task.dueDate, tod()) : 0;
+  var escalate = daysOver >= (S.settings.escDays || 5);
   task.remindersSent = (task.remindersSent||0) + 1;
   task.lastReminder = tod();
 
-  const subject = (escalate ? 'ESCALATION' : 'REMINDER') + ' #' + task.remindersSent + ': "' + task.name + '" - ' + emp.name + (daysOver > 0 ? ' (' + daysOver + 'd OVERDUE)' : '');
-  const body = 'Hi Sumesh,\n\nThis is ' + (escalate?'an ESCALATED':'a') + ' follow-up on:\n\n  Task: ' + task.name + '\n  Employee: ' + emp.name + '\n  Section: ' + task.section + '\n  Due: ' + fmtDate(task.dueDate) + (daysOver>0?' (' + daysOver + ' days overdue)':'') + '\n  Current Stage: ' + task.stage.replace(/_/g,' ').toUpperCase() + '\n  Reminders Sent: ' + task.remindersSent + '\n\nPlease update the status or reply with progress.\n\n' + (escalate?'This has been escalated to management.\n\n':'') + 'Galaxy Pharma Onboarding System';
-  const cc = escalate && S.settings.escEmail ? S.settings.escEmail : '';
+  var subject = (escalate ? 'ESCALATION' : 'REMINDER') + ' #' + task.remindersSent + ': "' + task.name + '" - ' + emp.name + (daysOver > 0 ? ' (' + daysOver + 'd OVERDUE)' : '');
+  var body = 'Hi Sumesh,\n\nThis is ' + (escalate?'an ESCALATED':'a') + ' follow-up on:\n\n  Task: ' + task.name + '\n  Employee: ' + emp.name + '\n  Section: ' + task.section + '\n  Due: ' + fmtDate(task.dueDate) + (daysOver>0?' (' + daysOver + ' days overdue)':'') + '\n\nPlease update status.\n\nGalaxy Pharma Onboarding System';
 
-  // Add to email queue as reminder
   S.emailQueue.push({
     id: gid(), created: nowISO(), empId: emp.id, empName: emp.name,
     section: task.section, to: S.settings.coordEmail, toName: 'Sumesh Nair',
     subject: subject, body: body, taskCount: 1, taskIds: [taskId],
-    sent: false, sentAt: null, type: escalate ? 'escalation' : 'reminder', cc: cc
+    sent: false, sentAt: null, type: escalate ? 'escalation' : 'reminder'
   });
 
-  task.log.push({ time: nowISO(), action: escalate?'escalation':'reminder', note: (escalate?'ESCALATION':'Reminder') + ' #' + task.remindersSent + ' queued' + (cc?' (CC: '+cc+')':'') });
-
-  saveStore(); render();
+  task.log.push({ time: nowISO(), action: 'reminder', note: (escalate?'ESCALATION':'Reminder') + ' #' + task.remindersSent + ' queued' });
+  markDirty(); render();
   toast((escalate?'Escalation':'Reminder') + ' queued for "' + task.name + '"','info');
-
-  // Jump to email queue
   go('emails', document.querySelectorAll('.nav-tab')[3]);
 }
 
 function sendAllOverdue() {
-  let n = 0;
-  S.employees.forEach(emp => {
-    emp.tasks.forEach(t => {
+  var n = 0;
+  S.employees.forEach(function(emp) {
+    emp.tasks.forEach(function(t) {
       if (t.stage === 'complete') return;
       if (t.dueDate >= tod()) return;
       if (t.lastReminder && dayDiff(t.lastReminder, tod()) < (S.settings.reminderFreq||2)) return;
-      // Queue reminder
-      const daysOver = dayDiff(t.dueDate, tod());
-      const escalate = daysOver >= (S.settings.escDays || 5);
+      var daysOver = dayDiff(t.dueDate, tod());
       t.remindersSent = (t.remindersSent||0) + 1;
       t.lastReminder = tod();
-      const subject = (escalate ? 'ESCALATION' : 'REMINDER') + ' #' + t.remindersSent + ': "' + t.name + '" - ' + emp.name + ' (' + daysOver + 'd OVERDUE)';
-      const body = 'Hi Sumesh,\n\nFollow-up on overdue task:\n\n  Task: ' + t.name + '\n  Employee: ' + emp.name + '\n  Due: ' + fmtDate(t.dueDate) + ' (' + daysOver + ' days overdue)\n\nPlease update status.\n\nGalaxy Pharma Onboarding System';
-      S.emailQueue.push({
-        id: gid(), created: nowISO(), empId: emp.id, empName: emp.name,
-        section: t.section, to: S.settings.coordEmail, toName: 'Sumesh Nair',
-        subject, body, taskCount: 1, taskIds: [t.id],
-        sent: false, sentAt: null, type: escalate ? 'escalation' : 'reminder'
-      });
+      var subject = 'REMINDER #' + t.remindersSent + ': "' + t.name + '" - ' + emp.name + ' (' + daysOver + 'd OVERDUE)';
+      var body = 'Hi Sumesh,\n\nOverdue task follow-up:\n\n  Task: ' + t.name + '\n  Employee: ' + emp.name + '\n  Due: ' + fmtDate(t.dueDate) + ' (' + daysOver + ' days overdue)\n\nPlease update status.\n\nGalaxy Pharma Onboarding System';
+      S.emailQueue.push({ id: gid(), created: nowISO(), empId: emp.id, empName: emp.name, section: t.section, to: S.settings.coordEmail, toName: 'Sumesh Nair', subject: subject, body: body, taskCount: 1, taskIds: [t.id], sent: false, sentAt: null, type: 'reminder' });
       t.log.push({ time: nowISO(), action: 'reminder', note: 'Overdue reminder #' + t.remindersSent + ' queued' });
       n++;
     });
   });
-  if (n === 0) { toast('All caught up - no overdue reminders needed!'); return; }
-  saveStore(); render();
-  toast(n + ' reminder emails queued. Go to Email Queue to send them.', 'info');
+  if (n === 0) { toast('All caught up!'); return; }
+  markDirty(); render();
+  toast(n + ' reminders queued.', 'info');
   go('emails', document.querySelectorAll('.nav-tab')[3]);
 }
 
 // ===== RENDER =====
-function render() {
-  renderDashboard(); renderPipeline(); renderTracker(); renderEmailQueue(); renderEmails(); renderSettings(); updateBadges();
-}
+function render() { renderDashboard(); renderPipeline(); renderTracker(); renderEmailQueue(); renderEmails(); renderSettings(); updateBadges(); }
 
 function updateBadges() {
-  const overdue = S.employees.flatMap(e => e.tasks).filter(t => t.stage !== 'complete' && t.dueDate < tod()).length;
-  const b = document.getElementById('badge-pipe');
+  var overdue = 0;
+  S.employees.forEach(function(e) { e.tasks.forEach(function(t) { if (t.stage !== 'complete' && t.dueDate < tod()) overdue++; }); });
+  var b = document.getElementById('badge-pipe');
   b.textContent = overdue; b.style.display = overdue > 0 ? 'inline-block' : 'none';
 }
 
 function renderDashboard() {
-  const all = S.employees.flatMap(e => e.tasks);
-  const total = all.length;
-  const byStage = {};
-  STAGE_ORDER.forEach(s => byStage[s] = 0);
-  all.forEach(t => {
+  var all = []; S.employees.forEach(function(e) { e.tasks.forEach(function(t) { all.push(t); }); });
+  var total = all.length;
+  var byStage = {}; STAGE_ORDER.forEach(function(s) { byStage[s] = 0; });
+  all.forEach(function(t) {
     if (t.stage !== 'complete' && t.dueDate < tod()) byStage.overdue++;
     else byStage[t.stage] = (byStage[t.stage]||0) + 1;
   });
@@ -899,172 +850,130 @@ function renderDashboard() {
     '<div class="stat green"><div class="stat-label">Complete</div><div class="stat-val">' + (byStage.complete||0) + '</div></div>' +
     '<div class="stat red"><div class="stat-label">Overdue</div><div class="stat-val">' + (byStage.overdue||0) + '</div></div>';
 
-  // Active onboardings
-  const ao = document.getElementById('dash-active');
-  const active = S.employees.filter(e => e.status === 'active');
+  var ao = document.getElementById('dash-active');
+  var active = S.employees.filter(function(e) { return e.status === 'active'; });
   if (active.length === 0) {
     ao.innerHTML = '<p style="text-align:center; color:var(--gray-400); padding:30px;">No active onboardings. Click "+ New Hire" to start.</p>';
   } else {
-    ao.innerHTML = active.map(e => {
-      const done = e.tasks.filter(t => t.stage==='complete').length;
-      const over = e.tasks.filter(t => t.stage!=='complete' && t.dueDate < tod()).length;
-      const pct = e.tasks.length ? Math.round(done/e.tasks.length*100) : 0;
+    ao.innerHTML = active.map(function(e) {
+      var done = 0, over = 0;
+      e.tasks.forEach(function(t) { if (t.stage==='complete') done++; if (t.stage!=='complete' && t.dueDate < tod()) over++; });
+      var pct = e.tasks.length ? Math.round(done/e.tasks.length*100) : 0;
       return '<div style="margin-bottom:14px; cursor:pointer;" onclick="showTaskModal(\'' + e.id + '\',\'' + (e.tasks[0]?e.tasks[0].id:'') + '\')">' +
         '<div style="display:flex; justify-content:space-between;"><div><strong>' + e.name + '</strong> <span style="color:var(--gray-400); font-size:12px;">' + e.role + '</span></div>' +
         '<div>' + pct + '% ' + (over>0?'<span class="badge wf-overdue">' + over + ' overdue</span>':'') + '</div></div>' +
         '<div class="progress-bar" style="margin-top:4px;"><div class="progress-fill" style="width:' + pct + '%; background:' + (over>0?'var(--red)':pct===100?'var(--green)':'var(--blue)') + '"></div></div>' +
-        '<div style="font-size:10px; color:var(--gray-400); margin-top:2px;">' + done + '/' + e.tasks.length + ' tasks - Started ' + fmtDate(e.start) + ' - Managed by Sumesh Nair</div>' +
-      '</div>';
+        '<div style="font-size:10px; color:var(--gray-400); margin-top:2px;">' + done + '/' + e.tasks.length + ' tasks - Started ' + fmtDate(e.start) + ' - Managed by Sumesh Nair</div></div>';
     }).join('');
   }
 
-  // Attention needed
-  const attn = document.getElementById('dash-attention');
-  const overdueList = [];
-  S.employees.forEach(emp => emp.tasks.forEach(t => {
+  var attn = document.getElementById('dash-attention');
+  var overdueList = [];
+  S.employees.forEach(function(emp) { emp.tasks.forEach(function(t) {
     if (t.stage !== 'complete' && t.dueDate < tod()) overdueList.push({ id: t.id, name: t.name, dueDate: t.dueDate, section: t.section, empName: emp.name, empId: emp.id });
-  }));
-  overdueList.sort((a,b) => dayDiff(b.dueDate, tod()) - dayDiff(a.dueDate, tod()));
+  }); });
+  overdueList.sort(function(a,b) { return dayDiff(b.dueDate, tod()) - dayDiff(a.dueDate, tod()); });
   if (overdueList.length === 0) {
     attn.innerHTML = '<p style="text-align:center; color:var(--green); padding:20px;">Nothing overdue!</p>';
   } else {
-    attn.innerHTML = overdueList.slice(0,20).map(t => {
-      const d = dayDiff(t.dueDate, tod());
+    attn.innerHTML = overdueList.slice(0,20).map(function(t) {
+      var d = dayDiff(t.dueDate, tod());
       return '<div style="display:flex; justify-content:space-between; padding:7px 0; border-bottom:1px solid var(--gray-100); font-size:12px; cursor:pointer;" onclick="showTaskModal(\'' + t.empId + '\',\'' + t.id + '\')">' +
         '<div><strong>' + t.name + '</strong><br><span style="color:var(--gray-400)">' + t.empName + ' - ' + t.section + '</span></div>' +
-        '<div><span class="badge wf-overdue">' + d + 'd</span></div>' +
-      '</div>';
+        '<div><span class="badge wf-overdue">' + d + 'd</span></div></div>';
     }).join('');
   }
 }
 
 function renderPipeline() {
-  const empF = document.getElementById('pipe-emp') ? document.getElementById('pipe-emp').value : 'all';
-  const secF = document.getElementById('pipe-section') ? document.getElementById('pipe-section').value : 'all';
+  var empF = document.getElementById('pipe-emp') ? document.getElementById('pipe-emp').value : 'all';
+  var secF = document.getElementById('pipe-section') ? document.getElementById('pipe-section').value : 'all';
 
-  const pe = document.getElementById('pipe-emp');
-  if (pe) {
-    const cv1 = pe.value;
-    pe.innerHTML = '<option value="all">All Employees</option>' + S.employees.map(e => '<option value="' + e.id + '"' + (cv1===e.id?' selected':'') + '>' + e.name + '</option>').join('');
-  }
+  var pe = document.getElementById('pipe-emp');
+  if (pe) { var cv1 = pe.value; pe.innerHTML = '<option value="all">All Employees</option>' + S.employees.map(function(e) { return '<option value="' + e.id + '"' + (cv1===e.id?' selected':'') + '>' + e.name + '</option>'; }).join(''); }
 
-  const ps = document.getElementById('pipe-section');
-  if (ps) {
-    const cv2 = ps.value;
-    const secs = [];
-    S.employees.forEach(e => e.tasks.forEach(t => { if (secs.indexOf(t.section) === -1) secs.push(t.section); }));
-    ps.innerHTML = '<option value="all">All Sections</option>' + secs.map(s => '<option value="' + s + '"' + (cv2===s?' selected':'') + '>' + s + '</option>').join('');
-  }
+  var ps = document.getElementById('pipe-section');
+  if (ps) { var cv2 = ps.value; var secs = []; S.employees.forEach(function(e) { e.tasks.forEach(function(t) { if (secs.indexOf(t.section)===-1) secs.push(t.section); }); }); ps.innerHTML = '<option value="all">All Sections</option>' + secs.map(function(s) { return '<option value="' + s + '"' + (cv2===s?' selected':'') + '>' + s + '</option>'; }).join(''); }
 
-  const columns = {};
-  STAGE_ORDER.forEach(s => columns[s] = []);
-
-  S.employees.forEach(emp => {
+  var columns = {}; STAGE_ORDER.forEach(function(s) { columns[s] = []; });
+  S.employees.forEach(function(emp) {
     if (empF !== 'all' && emp.id !== empF) return;
-    emp.tasks.forEach(t => {
+    emp.tasks.forEach(function(t) {
       if (secF !== 'all' && t.section !== secF) return;
-      const isOverdue = t.stage !== 'complete' && t.dueDate < tod();
-      const col = isOverdue ? 'overdue' : t.stage;
-      columns[col].push({ id: t.id, name: t.name, section: t.section, sectionIcon: t.sectionIcon, dueDate: t.dueDate, remindersSent: t.remindersSent, empName: emp.name, empId: emp.id });
+      var isOverdue = t.stage !== 'complete' && t.dueDate < tod();
+      columns[isOverdue ? 'overdue' : t.stage].push({ id: t.id, name: t.name, section: t.section, sectionIcon: t.sectionIcon, dueDate: t.dueDate, remindersSent: t.remindersSent, empName: emp.name, empId: emp.id });
     });
   });
 
-  const board = document.getElementById('pipeline-board');
-  board.innerHTML = STAGES.map(stg => {
-    const items = columns[stg.id] || [];
-    return '<div class="pipe-col">' +
-      '<div class="pipe-col-hd" style="background:' + stg.colBg + '; color:' + stg.colText + ';">' + stg.icon + ' ' + stg.label + ' <span class="count">' + items.length + '</span></div>' +
+  document.getElementById('pipeline-board').innerHTML = STAGES.map(function(stg) {
+    var items = columns[stg.id] || [];
+    return '<div class="pipe-col"><div class="pipe-col-hd" style="background:' + stg.colBg + '; color:' + stg.colText + ';">' + stg.icon + ' ' + stg.label + ' <span class="count">' + items.length + '</span></div>' +
       '<div class="pipe-col-body">' + (items.length === 0 ? '<div style="text-align:center; color:var(--gray-300); font-size:11px; padding:20px;">Empty</div>' :
-        items.map(t => {
-          const daysOver = t.dueDate < tod() ? dayDiff(t.dueDate, tod()) : 0;
-          return '<div class="pipe-card ' + (daysOver>0?'overdue':'') + '" onclick="showTaskModal(\'' + t.empId + '\',\'' + t.id + '\')">' +
-            '<div class="pc-emp">' + t.empName + '</div>' +
-            '<div class="pc-name">' + t.name + '</div>' +
-            '<div class="pc-meta"><span>' + t.sectionIcon + ' ' + fmtDate(t.dueDate) + '</span><span>' + (daysOver>0?daysOver+'d over':t.remindersSent+' rem.') + '</span></div>' +
-          '</div>';
-        }).join('')
-      ) + '</div>' +
-    '</div>';
+      items.map(function(t) {
+        var dO = t.dueDate < tod() ? dayDiff(t.dueDate, tod()) : 0;
+        return '<div class="pipe-card ' + (dO>0?'overdue':'') + '" onclick="showTaskModal(\'' + t.empId + '\',\'' + t.id + '\')"><div class="pc-emp">' + t.empName + '</div><div class="pc-name">' + t.name + '</div><div class="pc-meta"><span>' + (t.sectionIcon||'') + ' ' + fmtDate(t.dueDate) + '</span><span>' + (dO>0?dO+'d over':t.remindersSent+' rem.') + '</span></div></div>';
+      }).join('')) + '</div></div>';
   }).join('');
 }
 
 function renderTracker() {
-  const empF = document.getElementById('trk-emp') ? document.getElementById('trk-emp').value : 'all';
-  const stgF = document.getElementById('trk-stage') ? document.getElementById('trk-stage').value : 'all';
-  const search = (document.getElementById('trk-search') ? document.getElementById('trk-search').value : '').toLowerCase();
+  var empF = document.getElementById('trk-emp') ? document.getElementById('trk-emp').value : 'all';
+  var stgF = document.getElementById('trk-stage') ? document.getElementById('trk-stage').value : 'all';
+  var search = (document.getElementById('trk-search') ? document.getElementById('trk-search').value : '').toLowerCase();
 
-  const te = document.getElementById('trk-emp');
-  if (te) {
-    const cv = te.value;
-    te.innerHTML = '<option value="all">All Employees</option>' + S.employees.map(e => '<option value="' + e.id + '"' + (cv===e.id?' selected':'') + '>' + e.name + '</option>').join('');
-  }
-
-  const ts = document.getElementById('trk-stage');
-  if (ts) {
-    const cv2 = ts.value;
-    ts.innerHTML = '<option value="all">All Stages</option>' + STAGES.map(s => '<option value="' + s.id + '"' + (cv2===s.id?' selected':'') + '>' + s.icon + ' ' + s.label + '</option>').join('');
-  }
+  var te = document.getElementById('trk-emp');
+  if (te) { var cv = te.value; te.innerHTML = '<option value="all">All Employees</option>' + S.employees.map(function(e) { return '<option value="' + e.id + '"' + (cv===e.id?' selected':'') + '>' + e.name + '</option>'; }).join(''); }
+  var ts = document.getElementById('trk-stage');
+  if (ts) { var cv2 = ts.value; ts.innerHTML = '<option value="all">All Stages</option>' + STAGES.map(function(s) { return '<option value="' + s.id + '"' + (cv2===s.id?' selected':'') + '>' + s.icon + ' ' + s.label + '</option>'; }).join(''); }
 
   var rows = [];
-  S.employees.forEach(emp => {
+  S.employees.forEach(function(emp) {
     if (empF !== 'all' && emp.id !== empF) return;
-    emp.tasks.forEach(t => {
-      const isOverdue = t.stage !== 'complete' && t.dueDate < tod();
-      const effectiveStage = isOverdue ? 'overdue' : t.stage;
-      if (stgF !== 'all' && effectiveStage !== stgF && t.stage !== stgF) return;
-      if (search && t.name.toLowerCase().indexOf(search) === -1 && t.section.toLowerCase().indexOf(search) === -1) return;
-      rows.push({ id: t.id, name: t.name, section: t.section, sectionIcon: t.sectionIcon, stage: t.stage, dueDate: t.dueDate, remindersSent: t.remindersSent, log: t.log, empName: emp.name, empId: emp.id, effectiveStage: effectiveStage });
+    emp.tasks.forEach(function(t) {
+      var isOverdue = t.stage !== 'complete' && t.dueDate < tod();
+      var eff = isOverdue ? 'overdue' : t.stage;
+      if (stgF !== 'all' && eff !== stgF && t.stage !== stgF) return;
+      if (search && t.name.toLowerCase().indexOf(search)===-1 && t.section.toLowerCase().indexOf(search)===-1) return;
+      rows.push({ id: t.id, name: t.name, section: t.section, sectionIcon: t.sectionIcon, stage: t.stage, dueDate: t.dueDate, remindersSent: t.remindersSent, log: t.log, empName: emp.name, empId: emp.id, eff: eff });
     });
   });
   rows.sort(function(a,b) { return new Date(a.dueDate) - new Date(b.dueDate); });
-
   document.getElementById('trk-count').textContent = rows.length + ' tasks';
-
-  function stageInfo(id) { return STAGES.find(function(s){return s.id===id;}) || STAGES[0]; }
 
   document.getElementById('trk-tbody').innerHTML = rows.length === 0 ?
     '<tr><td colspan="8" style="text-align:center; padding:30px; color:var(--gray-400);">No tasks found</td></tr>' :
     rows.map(function(t) {
-      var si = stageInfo(t.effectiveStage);
-      var daysOver = t.dueDate < tod() && t.stage !== 'complete' ? dayDiff(t.dueDate, tod()) : 0;
-      var lastLog = t.log[t.log.length-1];
-      return '<tr style="' + (daysOver>0?'background:var(--red-light)':'') + '">' +
+      var si = STAGES.filter(function(s){return s.id===t.eff;})[0] || STAGES[0];
+      var dO = t.dueDate < tod() && t.stage !== 'complete' ? dayDiff(t.dueDate, tod()) : 0;
+      var ll = t.log[t.log.length-1];
+      return '<tr style="' + (dO>0?'background:var(--red-light)':'') + '">' +
         '<td><strong style="cursor:pointer;color:var(--blue);" onclick="showTaskModal(\'' + t.empId + '\',\'' + t.id + '\')">' + t.name + '</strong></td>' +
         '<td>' + t.empName + '</td>' +
-        '<td style="font-size:11px;">' + t.sectionIcon + ' ' + t.section + '</td>' +
-        '<td><span class="badge wf-' + t.effectiveStage + '">' + si.icon + ' ' + si.label + '</span></td>' +
-        '<td>' + fmtDate(t.dueDate) + ' ' + (daysOver>0?'<span class="badge wf-overdue">' + daysOver + 'd</span>':'') + '</td>' +
+        '<td style="font-size:11px;">' + (t.sectionIcon||'') + ' ' + t.section + '</td>' +
+        '<td><span class="badge wf-' + t.eff + '">' + si.icon + ' ' + si.label + '</span></td>' +
+        '<td>' + fmtDate(t.dueDate) + (dO>0?' <span class="badge wf-overdue">' + dO + 'd</span>':'') + '</td>' +
         '<td style="text-align:center;">' + t.remindersSent + '</td>' +
-        '<td style="font-size:11px; color:var(--gray-400);">' + (lastLog ? lastLog.note.substring(0,40) : '—') + '</td>' +
+        '<td style="font-size:11px; color:var(--gray-400);">' + (ll ? ll.note.substring(0,40) : '-') + '</td>' +
         '<td style="white-space:nowrap;">' +
           '<select class="btn-xs" style="padding:3px 6px; font-size:10px; border:1px solid var(--gray-300); border-radius:4px;" onchange="advanceTask(\'' + t.empId + '\',\'' + t.id + '\',this.value); this.value=\'\';">' +
             '<option value="">Move to...</option>' +
-            STAGES.filter(function(s){return s.id!=='overdue';}).map(function(s){return '<option value="' + s.id + '">' + s.icon + ' ' + s.label + '</option>';}).join('') +
+            STAGES.filter(function(s){return s.id!=='overdue';}).map(function(s){ return '<option value="' + s.id + '">' + s.icon + ' ' + s.label + '</option>'; }).join('') +
           '</select>' +
-          (daysOver>0||t.stage==='email_sent'||t.stage==='awaiting_response'?'<button class="btn btn-red btn-xs" onclick="sendReminder(\'' + t.empId + '\',\'' + t.id + '\')" style="margin-left:3px;">Remind</button>':'') +
-        '</td>' +
-      '</tr>';
+          (dO>0||t.stage==='email_sent'||t.stage==='awaiting_response'?'<button class="btn btn-red btn-xs" onclick="sendReminder(\'' + t.empId + '\',\'' + t.id + '\')" style="margin-left:3px;">Remind</button>':'') +
+        '</td></tr>';
     }).join('');
 }
 
 function renderEmails() {
-  var el = document.getElementById('email-log');
   document.getElementById('email-count').textContent = S.emails.length + ' emails';
-  if (S.emails.length === 0) {
-    el.innerHTML = '<p style="text-align:center; color:var(--gray-400); padding:20px;">No emails sent yet.</p>';
-    return;
-  }
+  var el = document.getElementById('email-log');
+  if (S.emails.length === 0) { el.innerHTML = '<p style="text-align:center; color:var(--gray-400); padding:20px;">No emails sent yet.</p>'; return; }
   el.innerHTML = S.emails.slice(0,60).map(function(e) {
-    var icon = e.type==='escalation'?'!!':e.type==='initial'?'>':'R';
     var typeLabel = e.type==='escalation'?'ESCALATION':e.type==='initial'?'Initial Assignment':'Reminder';
-    return '<div style="display:flex; gap:10px; padding:10px; border-bottom:1px solid var(--gray-100);">' +
-      '<div style="font-size:14px; font-weight:700; width:24px; text-align:center;">' + icon + '</div>' +
-      '<div style="flex:1;">' +
-        '<div style="font-size:13px;"><strong>' + typeLabel + '</strong> -> ' + e.toName + ' <span style="color:var(--gray-400);">(' + e.to + ')</span></div>' +
-        '<div style="font-size:12px; font-weight:600; color:var(--gray-700);">' + e.subject + '</div>' +
-        '<div style="font-size:11px; color:var(--gray-400);">' + e.empName + (e.section?' - '+e.section:'') + (e.taskName?' - '+e.taskName:'') + ' - ' + fmtFull(e.time) + '</div>' +
-      '</div>' +
-    '</div>';
+    return '<div style="display:flex; gap:10px; padding:10px; border-bottom:1px solid var(--gray-100);"><div style="flex:1;">' +
+      '<div style="font-size:13px;"><strong>' + typeLabel + '</strong> -> ' + e.toName + ' (' + e.to + ')</div>' +
+      '<div style="font-size:12px; font-weight:600; color:var(--gray-700);">' + e.subject + '</div>' +
+      '<div style="font-size:11px; color:var(--gray-400);">' + e.empName + (e.section?' - '+e.section:'') + ' - ' + fmtFull(e.time) + '</div></div></div>';
   }).join('');
 }
 
@@ -1073,7 +982,7 @@ function renderSettings() {
   document.getElementById('reminder-freq').value = S.settings.reminderFreq || 2;
   document.getElementById('esc-days').value = S.settings.escDays || 5;
   document.getElementById('esc-email').value = S.settings.escEmail || '';
-  document.getElementById('blob-id-display').textContent = BLOB_ID || '—';
+  document.getElementById('gh-token').value = getToken();
 
   document.getElementById('tmpl-preview').innerHTML = TEMPLATE.map(function(s) {
     return '<div style="margin-bottom:10px;"><div style="font-weight:600; font-size:13px; color:var(--navy);">' + s.icon + ' ' + s.section + ' <span style="color:var(--gray-400); font-weight:400;">(' + s.tasks.length + ' tasks, due +' + s.dueDays + 'd)</span></div>' +
@@ -1083,13 +992,16 @@ function renderSettings() {
 
 // ===== TASK DETAIL MODAL =====
 function showTaskModal(empId, taskId) {
-  var emp = S.employees.find(function(e){return e.id === empId;});
-  var task = emp && emp.tasks.find(function(t){return t.id === taskId;});
+  var emp = null, task = null;
+  for (var i = 0; i < S.employees.length; i++) { if (S.employees[i].id === empId) { emp = S.employees[i]; break; } }
+  if (!emp) return;
+  for (var j = 0; j < emp.tasks.length; j++) { if (emp.tasks[j].id === taskId) { task = emp.tasks[j]; break; } }
   if (!task) return;
 
   var isOverdue = task.stage !== 'complete' && task.dueDate < tod();
   var daysOver = isOverdue ? dayDiff(task.dueDate, tod()) : 0;
-  var effectiveStage = isOverdue ? 'overdue' : task.stage;
+  var eff = isOverdue ? 'overdue' : task.stage;
+  var effInfo = STAGES.filter(function(s){return s.id===eff;})[0] || STAGES[0];
 
   document.getElementById('tm-title').textContent = task.name;
 
@@ -1098,50 +1010,35 @@ function showTaskModal(empId, taskId) {
 
   var html = '<div class="task-detail">' +
     '<div class="td-field"><div class="td-label">Employee</div><div class="td-value">' + emp.name + ' - ' + emp.role + '</div></div>' +
-    '<div class="td-field"><div class="td-label">Section</div><div class="td-value">' + task.sectionIcon + ' ' + task.section + '</div></div>' +
+    '<div class="td-field"><div class="td-label">Section</div><div class="td-value">' + (task.sectionIcon||'') + ' ' + task.section + '</div></div>' +
     '<div class="td-field"><div class="td-label">Due Date</div><div class="td-value">' + fmtDate(task.dueDate) + (daysOver>0?' <span class="badge wf-overdue">' + daysOver + ' days overdue</span>':'') + '</div></div>' +
     '<div class="td-field"><div class="td-label">Assigned To</div><div class="td-value">Sumesh Nair (' + S.settings.coordEmail + ')</div></div>' +
     '<div class="td-field"><div class="td-label">Reminders Sent</div><div class="td-value">' + task.remindersSent + (task.lastReminder?' (last: '+fmtDate(task.lastReminder)+')':'') + '</div></div>' +
-    '<div class="td-field"><div class="td-label">Current Stage</div><div class="td-value"><span class="badge wf-' + effectiveStage + '" style="font-size:12px; padding:4px 12px;">' + (STAGES.find(function(s){return s.id===effectiveStage;})||{}).icon + ' ' + (STAGES.find(function(s){return s.id===effectiveStage;})||{}).label + '</span></div></div>' +
-  '</div>';
+    '<div class="td-field"><div class="td-label">Current Stage</div><div class="td-value"><span class="badge wf-' + eff + '" style="font-size:12px; padding:4px 12px;">' + effInfo.icon + ' ' + effInfo.label + '</span></div></div></div>';
 
-  html += '<h3 style="font-size:14px; margin:20px 0 10px; color:var(--navy);">Workflow Progress</h3>' +
-    '<div class="wf-timeline">';
+  html += '<h3 style="font-size:14px; margin:20px 0 10px; color:var(--navy);">Workflow Progress</h3><div class="wf-timeline">';
   stageSeq.forEach(function(stg, i) {
-    var si = STAGES.find(function(s){return s.id===stg;});
+    var si = STAGES.filter(function(s){return s.id===stg;})[0];
     var isDone = i < currentIdx || task.stage === 'complete';
     var isCurrent = i === currentIdx && task.stage !== 'complete';
-    var cls = isDone ? 'done' : isCurrent ? 'current' : '';
-    html += '<div class="wf-step ' + cls + '">' +
-      '<div class="wf-dot">' + (isDone ? 'OK' : (si?si.icon:'o')) + '</div>' +
-      '<div class="wf-step-label">' + (si?si.label:stg) + '</div>' +
-    '</div>';
+    html += '<div class="wf-step ' + (isDone?'done':isCurrent?'current':'') + '"><div class="wf-dot">' + (isDone ? 'OK' : (si?si.icon:'o')) + '</div><div class="wf-step-label">' + (si?si.label:stg) + '</div></div>';
   });
   html += '</div>';
 
-  if (task.stage === 'blocked') {
-    html += '<div style="background:var(--red-light); border:1px solid var(--red); border-radius:6px; padding:10px; margin:12px 0; font-size:13px;">' +
-      '<strong>BLOCKED</strong> - This task is flagged as blocked. Send a follow-up or update status.</div>';
-  }
-
-  html += '<h3 style="font-size:14px; margin:20px 0 10px; color:var(--navy);">Move Task</h3>' +
-    '<div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;">';
+  html += '<h3 style="font-size:14px; margin:20px 0 10px; color:var(--navy);">Move Task</h3><div style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:16px;">';
   STAGES.filter(function(s){return s.id!=='overdue';}).forEach(function(s) {
-    html += '<button class="btn btn-sm" style="background:' + s.colBg + '; color:' + s.colText + '; border:1px solid ' + s.colText + '20;" onclick="advanceTask(\'' + empId + '\',\'' + taskId + '\',\'' + s.id + '\',\'Manually moved to ' + s.label + '\'); showTaskModal(\'' + empId + '\',\'' + taskId + '\');">' + s.icon + ' ' + s.label + '</button>';
+    html += '<button class="btn btn-sm" style="background:' + s.colBg + '; color:' + s.colText + ';" onclick="advanceTask(\'' + empId + '\',\'' + taskId + '\',\'' + s.id + '\',\'Manually moved to ' + s.label + '\'); showTaskModal(\'' + empId + '\',\'' + taskId + '\');">' + s.icon + ' ' + s.label + '</button>';
   });
   html += '</div>';
 
   html += '<div style="display:flex; gap:6px; margin-bottom:16px;">' +
     '<button class="btn btn-red btn-sm" onclick="sendReminder(\'' + empId + '\',\'' + taskId + '\')">Send Reminder</button>' +
     '<input type="text" id="task-note-input" placeholder="Add a note..." style="flex:1; padding:6px 10px; border:1px solid var(--gray-300); border-radius:6px; font-size:12px;">' +
-    '<button class="btn btn-outline btn-sm" onclick="addTaskNote(\'' + empId + '\',\'' + taskId + '\')">+ Note</button>' +
-  '</div>';
+    '<button class="btn btn-outline btn-sm" onclick="addTaskNote(\'' + empId + '\',\'' + taskId + '\')">+ Note</button></div>';
 
-  html += '<h3 style="font-size:14px; margin:16px 0 10px; color:var(--navy);">Activity Log</h3>' +
-    '<div class="wf-log">';
-  var revLog = task.log.slice().reverse();
-  revLog.forEach(function(l) {
-    var cls = (l.action.indexOf('complete')>=0||l.action.indexOf('success')>=0)?'success':(l.action.indexOf('escalat')>=0||l.action.indexOf('overdue')>=0)?'alert':'action';
+  html += '<h3 style="font-size:14px; margin:16px 0 10px; color:var(--navy);">Activity Log</h3><div class="wf-log">';
+  task.log.slice().reverse().forEach(function(l) {
+    var cls = (l.action.indexOf('complete')>=0)?'success':(l.action.indexOf('escalat')>=0)?'alert':'action';
     html += '<div class="wf-log-item ' + cls + '"><div class="wf-log-time">' + fmtFull(l.time) + '</div><div class="wf-log-text">' + l.note + '</div></div>';
   });
   html += '</div>';
@@ -1154,11 +1051,11 @@ function addTaskNote(empId, taskId) {
   var input = document.getElementById('task-note-input');
   var note = input ? input.value.trim() : '';
   if (!note) return;
-  var emp = S.employees.find(function(e){return e.id === empId;});
-  var task = emp && emp.tasks.find(function(t){return t.id === taskId;});
+  var emp = null; for (var i = 0; i < S.employees.length; i++) { if (S.employees[i].id === empId) { emp = S.employees[i]; break; } }
+  var task = null; if (emp) for (var j = 0; j < emp.tasks.length; j++) { if (emp.tasks[j].id === taskId) { task = emp.tasks[j]; break; } }
   if (!task) return;
   task.log.push({ time: nowISO(), action: 'note', note: 'Note: ' + note });
-  saveStore();
+  markDirty();
   showTaskModal(empId, taskId);
   toast('Note added');
 }
@@ -1170,26 +1067,26 @@ function exportData() {
   a.download = 'GalaxyPharma_Onboarding_' + tod() + '.json'; a.click();
   toast('Data exported');
 }
-function importData() { document.getElementById('imp-input').click(); }
 function handleImport(e) {
   var f = e.target.files[0]; if (!f) return;
   var r = new FileReader();
   r.onload = function(ev) {
     try {
       var d = JSON.parse(ev.target.result);
-      if(d.employees){
-        S = { employees: [], emails: [], emailQueue: [], settings: S.settings, ...d };
-        if (!S.emailQueue) S.emailQueue = [];
-        saveStore(); render();
-        toast('Imported!');
-      } else toast('Invalid file','err');
+      if(d.employees){ S = { employees: d.employees||[], emails: d.emails||[], emailQueue: d.emailQueue||[], settings: d.settings || S.settings }; markDirty(); render(); toast('Imported!'); }
+      else toast('Invalid file','err');
     } catch(err) { toast('Parse error','err'); }
   }; r.readAsText(f);
 }
 
 // ===== INIT =====
 document.getElementById('nh-start').value = tod();
-cloudInit().then(function() { render(); });
+// Load from cloud first, fallback to local
+refreshFromCloud();
+// Auto-refresh every 60 seconds
+setInterval(function() {
+  if (!hasUnpublished) refreshFromCloud();
+}, 60000);
 </script>
 </body>
 </html>
